@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\KlienController;
 use App\Http\Controllers\Admin\LeadsController;
 use App\Http\Controllers\Admin\LisensiController;
+use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\Admin\PengumumanController;
 use App\Http\Controllers\Admin\RilisController;
 use App\Http\Controllers\Admin\TelemetriController;
@@ -70,4 +71,10 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
     Route::patch('/pengumuman/{id}/toggle', [PengumumanController::class, 'toggle'])->name('pengumuman.toggle');
     Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
+
+    // Manajemen Pengguna & Tim Vendor (RBAC Super Admin)
+    Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
+    Route::post('/pengguna', [PenggunaController::class, 'store'])->name('pengguna.store');
+    Route::put('/pengguna/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
+    Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
 });

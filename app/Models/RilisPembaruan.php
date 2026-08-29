@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property bool $is_public
  * @property bool $is_critical_patch
  * @property Carbon|null $published_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\RiwayatUpdate> $riwayatUpdates
+ * @property-read Collection<int, RiwayatUpdate> $riwayatUpdates
  */
 class RilisPembaruan extends Model
 {

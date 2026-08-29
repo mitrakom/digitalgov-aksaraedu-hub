@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Application;
 
 /**
  * AksaraEdu Central Hub - Resilient Post-Deploy Webhook
@@ -8,11 +10,10 @@ declare(strict_types=1);
  * Standalone entry point to extract deploy.zip, migrate database,
  * and clear caches without dependency on full framework routing.
  */
-
 header('Content-Type: application/json; charset=utf-8');
 
 $baseDir = dirname(__DIR__);
-$envFile = $baseDir . '/.env';
+$envFile = $baseDir.'/.env';
 
 // 1. Baca DEPLOY_WEBHOOK_SECRET dari .env
 $expectedSecret = null;
@@ -55,14 +56,14 @@ $logs = [];
 
 // 3. Ekstraksi deploy.zip jika ditemukan
 $zipPaths = [
-    $baseDir . '/deploy.zip',
-    __DIR__ . '/deploy.zip',
+    $baseDir.'/deploy.zip',
+    __DIR__.'/deploy.zip',
 ];
 
 $extracted = false;
 foreach ($zipPaths as $zipPath) {
     if (file_exists($zipPath)) {
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
         if ($zip->open($zipPath) === true) {
             $zip->extractTo($baseDir);
             $zip->close();
@@ -82,12 +83,12 @@ if (! $extracted) {
 
 // 4. Pastikan direktori penting tersedia
 $dirsToEnsure = [
-    $baseDir . '/storage/framework/views',
-    $baseDir . '/storage/framework/sessions',
-    $baseDir . '/storage/framework/cache',
-    $baseDir . '/storage/logs',
-    $baseDir . '/storage/keys',
-    $baseDir . '/bootstrap/cache',
+    $baseDir.'/storage/framework/views',
+    $baseDir.'/storage/framework/sessions',
+    $baseDir.'/storage/framework/cache',
+    $baseDir.'/storage/logs',
+    $baseDir.'/storage/keys',
+    $baseDir.'/bootstrap/cache',
 ];
 
 foreach ($dirsToEnsure as $dir) {
@@ -98,19 +99,19 @@ foreach ($dirsToEnsure as $dir) {
 
 // 5. Bootstrap Laravel Artisan untuk Migrate & Optimize Cache
 try {
-    if (file_exists($baseDir . '/vendor/autoload.php') && file_exists($baseDir . '/bootstrap/app.php')) {
-        require_once $baseDir . '/vendor/autoload.php';
-        /** @var \Illuminate\Foundation\Application $app */
-        $app = require_once $baseDir . '/bootstrap/app.php';
+    if (file_exists($baseDir.'/vendor/autoload.php') && file_exists($baseDir.'/bootstrap/app.php')) {
+        require_once $baseDir.'/vendor/autoload.php';
+        /** @var Application $app */
+        $app = require_once $baseDir.'/bootstrap/app.php';
 
-        $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
+        $kernel = $app->make(Kernel::class);
 
         // Run migrations & Seeder
         $kernel->call('migrate', ['--force' => true]);
-        $logs[] = '✓ Database migrate: ' . trim($kernel->output());
+        $logs[] = '✓ Database migrate: '.trim($kernel->output());
 
         $kernel->call('db:seed', ['--force' => true]);
-        $logs[] = '✓ Database seed (Production initial admin & keys): ' . trim($kernel->output());
+        $logs[] = '✓ Database seed (Production initial admin & keys): '.trim($kernel->output());
 
         // Optimasi Cache
         $kernel->call('config:cache');
@@ -121,7 +122,7 @@ try {
         $logs[] = 'ℹ️ File vendor/autoload.php belum lengkap.';
     }
 } catch (Throwable $e) {
-    $logs[] = '⚠️ Artisan command warning: ' . $e->getMessage();
+    $logs[] = '⚠️ Artisan command warning: '.$e->getMessage();
 }
 
 http_response_code(200);

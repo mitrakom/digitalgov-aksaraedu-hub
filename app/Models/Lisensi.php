@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,9 +29,9 @@ use Illuminate\Support\Carbon;
  * @property array<string>|null $allowed_features
  * @property string|null $catatan_kontrak
  * @property float $nilai_kontrak
- * @property-read \App\Models\KlienSekolah $klienSekolah
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TelemetriHeartbeat> $telemetriHeartbeats
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\RiwayatUpdate> $riwayatUpdates
+ * @property-read KlienSekolah $klienSekolah
+ * @property-read Collection<int, TelemetriHeartbeat> $telemetriHeartbeats
+ * @property-read Collection<int, RiwayatUpdate> $riwayatUpdates
  */
 class Lisensi extends Model
 {
