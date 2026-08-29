@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Link, usePage, router } from '@inertiajs/vue3'
 import {
   LayoutDashboard,
@@ -22,6 +22,7 @@ import {
 
 const page = usePage()
 const sidebarOpen = ref(false)
+const flash = computed(() => ((page.props as any).flash as { success?: string; error?: string } | undefined) || {})
 
 const navItems = [
   { name: 'Dashboard Eksekutif', href: '/admin', icon: LayoutDashboard },
@@ -179,16 +180,16 @@ const logout = () => {
       </header>
 
       <!-- Flash Notification Message -->
-      <div v-if="page.props.flash?.success" class="bg-emerald-900/60 border-b border-emerald-500/30 px-6 py-2.5 flex items-center justify-between text-xs text-emerald-200 animate-in fade-in">
+      <div v-if="flash.success" class="bg-emerald-900/60 border-b border-emerald-500/30 px-6 py-2.5 flex items-center justify-between text-xs text-emerald-200 animate-in fade-in">
         <div class="flex items-center gap-2">
           <CheckCircle2 class="w-4 h-4 text-emerald-400" />
-          <span>{{ page.props.flash.success }}</span>
+          <span>{{ flash.success }}</span>
         </div>
       </div>
-      <div v-if="page.props.flash?.error" class="bg-rose-900/60 border-b border-rose-500/30 px-6 py-2.5 flex items-center justify-between text-xs text-rose-200 animate-in fade-in">
+      <div v-if="flash.error" class="bg-rose-900/60 border-b border-rose-500/30 px-6 py-2.5 flex items-center justify-between text-xs text-rose-200 animate-in fade-in">
         <div class="flex items-center gap-2">
           <AlertCircle class="w-4 h-4 text-rose-400" />
-          <span>{{ page.props.flash.error }}</span>
+          <span>{{ flash.error }}</span>
         </div>
       </div>
 

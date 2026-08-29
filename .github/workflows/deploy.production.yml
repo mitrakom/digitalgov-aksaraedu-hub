@@ -1,4 +1,4 @@
-name: Deploy Central Hub to Production
+name: CI Tests & Production Deploy
 
 on:
   push:
@@ -14,8 +14,49 @@ permissions:
   contents: read
 
 jobs:
+  # ========================================================
+  # JOB 1: TEST & CI QUALITY CHECK
+  # ========================================================
+  test:
+    name: Run Quality & Test Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring,ctype,fileinfo,gd,xml,curl,zip,openssl,pdo_mysql,pdo_pgsql,redis,bcmath
+          tools: composer:v2
+          coverage: none
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup Application Dependencies
+        run: |
+          composer install --prefer-dist --no-interaction
+          cp .env.example .env
+          php artisan key:generate
+          touch database/database.sqlite
+          npm ci --include=dev
+
+      - name: Run CI Checks & Tests
+        run: composer ci:check
+
+  # ========================================================
+  # JOB 2: BUILD, PACKAGE & DEPLOY TO HOSTING
+  # (Hanya dijalankan jika Job 1 / Test Lolos 100%)
+  # ========================================================
   deploy:
     name: Build, Package & Deploy Central Hub
+    needs: test
     runs-on: ubuntu-latest
     environment: production
     timeout-minutes: 15
