@@ -105,9 +105,12 @@ try {
 
         $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
 
-        // Run migrations
+        // Run migrations & Seeder
         $kernel->call('migrate', ['--force' => true]);
         $logs[] = '✓ Database migrate: ' . trim($kernel->output());
+
+        $kernel->call('db:seed', ['--force' => true]);
+        $logs[] = '✓ Database seed (Production initial admin & keys): ' . trim($kernel->output());
 
         // Optimasi Cache
         $kernel->call('config:cache');

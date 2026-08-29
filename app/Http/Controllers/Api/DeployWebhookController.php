@@ -68,12 +68,15 @@ class DeployWebhookController extends Controller
             File::makeDirectory(storage_path('keys'), 0700, true);
         }
 
-        // 3. Database Migration
+        // 3. Database Migration & Seed
         try {
             Artisan::call('migrate', ['--force' => true]);
             $outputLog[] = '✓ php artisan migrate: '.trim(Artisan::output());
+
+            Artisan::call('db:seed', ['--force' => true]);
+            $outputLog[] = '✓ php artisan db:seed: '.trim(Artisan::output());
         } catch (Exception $e) {
-            $outputLog[] = '⚠️ Migrasi gagal: '.$e->getMessage();
+            $outputLog[] = '⚠️ Migrasi/Seed gagal: '.$e->getMessage();
         }
 
         // 4. Cache Optimizations
