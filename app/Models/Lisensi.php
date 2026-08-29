@@ -87,7 +87,10 @@ class Lisensi extends Model
 
     public function latestTelemetri(): ?TelemetriHeartbeat
     {
-        return $this->telemetriHeartbeats()->latest('waktu_ping')->first();
+        /** @var TelemetriHeartbeat|null $telemetri */
+        $telemetri = $this->telemetriHeartbeats()->latest('waktu_ping')->first();
+
+        return $telemetri;
     }
 
     public function isWarrantyActive(): bool

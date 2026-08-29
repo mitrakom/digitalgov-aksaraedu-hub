@@ -56,6 +56,9 @@ class KlienSekolah extends Model
 
     public function getActiveLisensiAttribute(): ?Lisensi
     {
-        return $this->lisensis()->where('status', 'active')->latest()->first();
+        /** @var Lisensi|null $lisensi */
+        $lisensi = $this->lisensis()->where('status', 'active')->latest()->first();
+
+        return $lisensi;
     }
 }

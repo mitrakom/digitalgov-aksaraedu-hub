@@ -56,7 +56,7 @@ class LeadApiController extends Controller
             'data' => [
                 'id' => $lead->id,
                 'demo_url' => $demoUrl,
-                'expired_at' => $lead->demo_expired_at->toIso8601String(),
+                'expired_at' => $lead->demo_expired_at?->toIso8601String(),
                 'username_demo' => 'admin_demo',
                 'password_demo' => 'AksaraDemo2026!',
             ],
