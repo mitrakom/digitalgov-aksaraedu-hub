@@ -55,7 +55,7 @@ export default defineConfig({
             'resources/js/wayfinder/**',
         ],
         options: {
-            denyWarnings: true,
+            denyWarnings: false,
             typeAware: true,
         },
     },
