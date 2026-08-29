@@ -1,0 +1,193 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build, Package & Deploy to Production
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 15
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Setup PHP 8.3 with Zip extension
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring,ctype,fileinfo,gd,xml,curl,zip
+          tools: composer:v2
+          coverage: none
+
+      # Step 3: Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      # Step 4: Install Composer dependencies (Production optimized)
+      - name: Install Composer dependencies
+        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+      # Step 5: Install Node dependencies & Build frontend assets
+      - name: Install Node dependencies & Build frontend assets
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            npm install -g pnpm
+            pnpm install --frozen-lockfile
+            pnpm run build
+          elif [ -f yarn.lock ]; then
+            yarn install --frozen-lockfile
+            yarn build
+          else
+            npm ci
+            npm run build
+          fi
+        env:
+          NODE_ENV: production
+
+      # Step 6: Generate dynamic application version (CalVer + Time WITA / Makassar)
+      - name: Generate dynamic application version (CalVer + Time WITA)
+        run: |
+          VERSION_TAG=$(TZ='Asia/Makassar' date +'v%Y.%m.%d.%H%M')
+          echo "APP_VERSION=$VERSION_TAG" >> $GITHUB_ENV
+          echo "🏷️ Menetapkan versi otomatis (WITA): $VERSION_TAG"
+          sed -i "s/'string' => .*/'string' => '${VERSION_TAG}',/" config/version.php
+
+      # Step 7: Package application into deploy.zip (Option A: Single-archive deployment)
+      - name: Create deploy.zip archive
+        run: |
+          echo "📦 Mengompres aplikasi ke deploy.zip (Versi: ${{ env.APP_VERSION }})..."
+          zip -r -q deploy.zip . \
+            -x ".git/*" \
+            -x ".github/*" \
+            -x ".env*" \
+            -x ".agents/*" \
+            -x ".gemini/*" \
+            -x ".claude/*" \
+            -x ".cursor/*" \
+            -x ".windsurf/*" \
+            -x ".cortex/*" \
+            -x "skills/*" \
+            -x "rules/*" \
+            -x "plugins/*" \
+            -x "boost.json" \
+            -x "AGENTS.md" \
+            -x "CLAUDE.md" \
+            -x "GEMINI.md" \
+            -x "COPILOT.md" \
+            -x "PROMPT.md" \
+            -x "tests/*" \
+            -x "database/factories/*" \
+            -x ".phpunit.cache/*" \
+            -x "phpunit.xml*" \
+            -x "pest.php" \
+            -x "node_modules/*" \
+            -x "storage/logs/*" \
+            -x "storage/media-library/*" \
+            -x "storage/app/public/*" \
+            -x "storage/app/private/*" \
+            -x "storage/pail/*" \
+            -x "storage/*.sqlite*" \
+            -x "bootstrap/cache/*" \
+            -x "scratch/*" \
+            -x "docs/*" \
+            -x "user_guides/*" \
+            -x "mkdocs.yml" \
+            -x "README.md" \
+            -x "*.log" \
+            -x "*.tar.gz"
+
+          ZIP_SIZE=$(du -sh deploy.zip | cut -f1)
+          echo "✓ deploy.zip berhasil dibuat (Ukuran: $ZIP_SIZE)"
+
+      # Step 8: Upload deploy.zip via FTP (Only 1 file uploaded - Fast & 100% reliable)
+      - name: Upload deploy.zip to Production FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_PROD_HOST }}
+          username: ${{ secrets.FTP_PROD_USER }}
+          password: ${{ secrets.FTP_PROD_PASSWORD }}
+          port: 21
+          local-dir: ./
+          server-dir: ./
+          dangerous-clean-slate: false
+          protocol: ftp
+          security: loose
+          timeout: 300000
+          log-level: standard
+          exclude: |
+            **
+            !deploy.zip
+
+      # Step 9: Trigger Webhook (Auto-extract deploy.zip + migrate + cache optimizations)
+      - name: Trigger Post-Deploy Webhook (Auto-Extract, Migrate & Cache)
+        run: |
+          echo "🔄 Mengirim sinyal webhook untuk auto-extract, database migration, dan cache update..."
+          if [ -z "${{ secrets.DEPLOY_WEBHOOK_SECRET }}" ]; then
+            echo "⚠️ PERINGATAN: DEPLOY_WEBHOOK_SECRET belum diisi di GitHub Secrets."
+            echo "File deploy.zip telah ter-upload, namun auto-extract & migrasi otomatis tidak terpanggil."
+          else
+            RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST \
+              -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" \
+              -H "X-Deploy-Token: ${{ secrets.DEPLOY_WEBHOOK_SECRET }}" \
+              -H "Content-Type: application/json" \
+              -H "Accept: application/json" \
+              -d "{\"token\":\"${{ secrets.DEPLOY_WEBHOOK_SECRET }}\"}" \
+              https://edupoin.digitalgov.id/api/deploy-webhook)
+
+            HTTP_BODY=$(echo "$RESPONSE" | sed -e 's/HTTP_STATUS:.*//g')
+            HTTP_STATUS=$(echo "$RESPONSE" | tr -d '\n' | sed -e 's/.*HTTP_STATUS://')
+
+            echo "Response Status: $HTTP_STATUS"
+            echo "Response Body: $HTTP_BODY"
+
+            if [ "$HTTP_STATUS" -eq 200 ]; then
+              echo "✓ deploy.zip berhasil diekstrak, migrasi database & optimasi cache sukses!"
+            elif [ "$HTTP_STATUS" -eq 403 ]; then
+              echo "⚠️ PERINGATAN: Endpoint webhook diblokir oleh WAF/Imunify360 Bot-Protection di hosting."
+              echo "ℹ️ INFO: File deploy.zip telah sukses ter-upload via FTP."
+              echo "💡 Solusi: Whitelist endpoint /api/deploy-webhook di cPanel atau ekstrak manual deploy.zip di cPanel File Manager."
+            else
+              echo "❌ ERROR: Webhook deployment gagal (HTTP $HTTP_STATUS)"
+              exit 1
+            fi
+          fi
+        continue-on-error: true
+
+      # Step 10: Verify deployed assets
+      - name: Verify deployed assets
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://edupoin.digitalgov.id/build/manifest.json)
+          if [ "$response" != "200" ]; then
+            echo "⚠️ Asset manifest check returned: $response"
+          else
+            echo "✓ Production assets verified successfully ($response)"
+          fi
+        continue-on-error: true
+
+      # Step 11: Deployment notifications
+      - name: Deployment summary
+        if: always()
+        run: |
+          echo "================================================"
+          echo "📊 STATUS DEPLOYMENT: ${{ job.status }}"
+          echo "🏷️ Versi Rilis:     ${{ env.APP_VERSION }}"
+          echo "🌐 Domain:          https://edupoin.digitalgov.id"
+          echo "📌 Commit:          ${{ github.sha }}"
+          echo "👤 Actor:           ${{ github.actor }}"
+          echo "================================================"

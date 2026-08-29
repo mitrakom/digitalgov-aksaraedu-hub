@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .step-title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 13.5px; font-weight: 700; fill: #1e293b; }
+      .step-desc { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 11px; fill: #475569; }
+      .badge { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 10.5px; font-weight: 700; }
+    </style>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.06" />
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#16a34a" />
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#dc2626" />
+    </marker>
+  </defs>
+
+  <rect width="960" height="480" fill="#f8fafc" rx="16" />
+
+  <text x="40" y="45" class="title">Siklus Tagihan, Grace Period 14 Hari &amp; Re-Aktivasi (SaaS)</text>
+  <text x="40" y="68" class="subtitle">Alur Notifikasi Invoice, Masa Tenggang 14 Hari, Mode Read-Only &amp; Perpanjangan Lisensi Instan</text>
+
+  <!-- STEP 1: H-30 INVOICE -->
+  <g transform="translate(40, 100)" filter="url(#shadow)">
+    <rect width="200" height="200" rx="10" fill="#ffffff" stroke="#bae6fd" stroke-width="1.5" />
+    <rect x="0" y="0" width="200" height="30" rx="10" fill="#0284c7" />
+    <rect x="0" y="18" width="200" height="12" fill="#0284c7" />
+    <text x="100" y="20" text-anchor="middle" fill="#ffffff" class="badge">📅 H-30 SEBELUM TEMPO</text>
+
+    <text x="15" y="55" class="step-title">📩 Invoice &amp; WA</text>
+    <text x="15" y="75" class="step-desc">• Sistem otomatis kirim</text>
+    <text x="15" y="90" class="step-desc">  invoice perpanjangan</text>
+    <text x="15" y="105" class="step-desc">• Notifikasi WA ke PIC</text>
+    <text x="15" y="120" class="step-desc">• Pengingat ke-2 di H-7</text>
+    
+    <rect x="15" y="150" width="170" height="25" rx="4" fill="#e0f2fe" />
+    <text x="100" y="166" text-anchor="middle" fill="#0369a1" font-size="10.5" font-weight="700">Status: Active</text>
+  </g>
+
+  <!-- Arrow 1 to 2 -->
+  <path d="M 240 200 L 265 200" fill="none" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- STEP 2: HARI H JATUH TEMPO -->
+  <g transform="translate(270, 100)" filter="url(#shadow)">
+    <rect width="200" height="200" rx="10" fill="#ffffff" stroke="#fde68a" stroke-width="1.5" />
+    <rect x="0" y="0" width="200" height="30" rx="10" fill="#d97706" />
+    <rect x="0" y="18" width="200" height="12" fill="#d97706" />
+    <text x="100" y="20" text-anchor="middle" fill="#ffffff" class="badge">⏰ HARI H JATUH TEMPO</text>
+
+    <text x="15" y="55" class="step-title">🛡️ Grace Period (14 Hari)</text>
+    <text x="15" y="75" class="step-desc">• Sistem tetap berfungsi</text>
+    <text x="15" y="90" class="step-desc">  100% normal</text>
+    <text x="15" y="105" class="step-desc">• Banner warning muncul</text>
+    <text x="15" y="120" class="step-desc">  hanya di Admin Panel</text>
+    
+    <rect x="15" y="150" width="170" height="25" rx="4" fill="#fef3c7" />
+    <text x="100" y="166" text-anchor="middle" fill="#b45309" font-size="10.5" font-weight="700">Status: Grace Period</text>
+  </g>
+
+  <!-- Arrow 2 to 3 -->
+  <path d="M 470 200 L 495 200" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arrow-red)" />
+
+  <!-- STEP 3: H+14 LEWAT GRACE PERIOD -->
+  <g transform="translate(500, 100)" filter="url(#shadow)">
+    <rect width="200" height="200" rx="10" fill="#ffffff" stroke="#fecaca" stroke-width="1.5" />
+    <rect x="0" y="0" width="200" height="30" rx="10" fill="#dc2626" />
+    <rect x="0" y="18" width="200" height="12" fill="#dc2626" />
+    <text x="100" y="20" text-anchor="middle" fill="#ffffff" class="badge">🔒 H+14 (LEWAT GRACE)</text>
+
+    <text x="15" y="55" class="step-title">⚠️ Mode Read-Only</text>
+    <text x="15" y="75" class="step-desc">• Pembuatan ujian dikunci</text>
+    <text x="15" y="90" class="step-desc">• Nilai &amp; siswa tetap aman</text>
+    <text x="15" y="105" class="step-desc">• Tidak ada data dihapus</text>
+    <text x="15" y="120" class="step-desc">• Ekspor data tetap aktif</text>
+    
+    <rect x="15" y="150" width="170" height="25" rx="4" fill="#fee2e2" />
+    <text x="100" y="166" text-anchor="middle" fill="#991b1b" font-size="10.5" font-weight="700">Status: Read-Only</text>
+  </g>
+
+  <!-- Arrow 3 to 4 -->
+  <path d="M 700 200 L 725 200" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#arrow-green)" />
+
+  <!-- STEP 4: RE-AKTIVASI -->
+  <g transform="translate(730, 100)" filter="url(#shadow)">
+    <rect width="190" height="200" rx="10" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5" />
+    <rect x="0" y="0" width="190" height="30" rx="10" fill="#16a34a" />
+    <rect x="0" y="18" width="190" height="12" fill="#16a34a" />
+    <text x="95" y="20" text-anchor="middle" fill="#ffffff" class="badge">🔄 RE-AKTIVASI</text>
+
+    <text x="15" y="55" class="step-title">🎉 Kembali Aktif</text>
+    <text x="15" y="75" class="step-desc">• Pembayaran diverifikasi</text>
+    <text x="15" y="90" class="step-desc">• 1-Klik tombol Renew</text>
+    <text x="15" y="105" class="step-desc">• Masa aktif +365 hari</text>
+    <text x="15" y="120" class="step-desc">• Akses terbuka instan</text>
+    
+    <rect x="15" y="150" width="160" height="25" rx="4" fill="#dcfce7" />
+    <text x="95" y="166" text-anchor="middle" fill="#15803d" font-size="10.5" font-weight="700">Status: Active (+1 Th)</text>
+  </g>
+
+  <!-- RE-AKTIVASI FROM ANY POINT TO STEP 4 -->
+  <path d="M 370 300 C 370 350, 825 350, 825 305" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-dasharray="5,5" marker-end="url(#arrow-green)" />
+  <rect x="520" y="338" width="170" height="22" rx="4" fill="#ffffff" stroke="#16a34a" />
+  <text x="605" y="353" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">Perpanjangan Kapan Saja</text>
+</svg>

@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .gate-title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 700; fill: #1e293b; }
+      .gate-desc { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 11px; fill: #475569; }
+      .btn-text { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 700; }
+    </style>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.06" />
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#16a34a" />
+    </marker>
+  </defs>
+
+  <rect width="960" height="520" fill="#f8fafc" rx="16" />
+
+  <text x="40" y="45" class="title">Gerbang Verifikasi Go-Live (Go-Live Gate Protocol)</text>
+  <text x="40" y="68" class="subtitle">5 Titik Uji Kritis yang Wajib Lolos 100% Sebelum Serah Terima Sistem ke Pihak Sekolah</text>
+
+  <!-- 5 Checkpoints in a Horizontal Grid -->
+  <!-- Checkpoint 1 -->
+  <g transform="translate(40, 105)" filter="url(#shadow)">
+    <rect width="165" height="240" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect x="0" y="0" width="165" height="32" rx="10" fill="#0284c7" />
+    <rect x="0" y="20" width="165" height="12" fill="#0284c7" />
+    <text x="82" y="21" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700">GATE 1: DATABASE</text>
+
+    <text x="12" y="55" class="gate-title">🗄️ Migrasi Schema</text>
+    <text x="12" y="75" class="gate-desc">• Status bersih</text>
+    <text x="12" y="92" class="gate-desc">• Foreign key valid</text>
+    <text x="12" y="109" class="gate-desc">• Seeder default OK</text>
+    
+    <rect x="12" y="195" width="141" height="28" rx="6" fill="#dcfce7" stroke="#16a34a" />
+    <text x="82" y="213" text-anchor="middle" fill="#15803d" class="btn-text">✅ DB Clean</text>
+  </g>
+
+  <!-- Arrow 1 to 2 -->
+  <path d="M 210 225 L 225 225" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Checkpoint 2 -->
+  <g transform="translate(230, 105)" filter="url(#shadow)">
+    <rect width="165" height="240" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect x="0" y="0" width="165" height="32" rx="10" fill="#0284c7" />
+    <rect x="0" y="20" width="165" height="12" fill="#0284c7" />
+    <text x="82" y="21" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700">GATE 2: NETWORK</text>
+
+    <text x="12" y="55" class="gate-title">⚡ Latensi HTTPS</text>
+    <text x="12" y="75" class="gate-desc">• Response &lt; 500ms</text>
+    <text x="12" y="92" class="gate-desc">• SSL TLSv1.3 Valid</text>
+    <text x="12" y="109" class="gate-desc">• Gzip/Brotli Aktif</text>
+    
+    <rect x="12" y="195" width="141" height="28" rx="6" fill="#dcfce7" stroke="#16a34a" />
+    <text x="82" y="213" text-anchor="middle" fill="#15803d" class="btn-text">✅ Fast Response</text>
+  </g>
+
+  <!-- Arrow 2 to 3 -->
+  <path d="M 400 225 L 415 225" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Checkpoint 3 -->
+  <g transform="translate(420, 105)" filter="url(#shadow)">
+    <rect width="165" height="240" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect x="0" y="0" width="165" height="32" rx="10" fill="#9333ea" />
+    <rect x="0" y="20" width="165" height="12" fill="#9333ea" />
+    <text x="82" y="21" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700">GATE 3: SECURITY</text>
+
+    <text x="12" y="55" class="gate-title">🔐 Lisensi RSA</text>
+    <text x="12" y="75" class="gate-desc">• aksaraedu.lic valid</text>
+    <text x="12" y="92" class="gate-desc">• NPSN cocok</text>
+    <text x="12" y="109" class="gate-desc">• HW Binding sync</text>
+    
+    <rect x="12" y="195" width="141" height="28" rx="6" fill="#dcfce7" stroke="#16a34a" />
+    <text x="82" y="213" text-anchor="middle" fill="#15803d" class="btn-text">✅ RSA Verified</text>
+  </g>
+
+  <!-- Arrow 3 to 4 -->
+  <path d="M 590 225 L 605 225" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Checkpoint 4 -->
+  <g transform="translate(610, 105)" filter="url(#shadow)">
+    <rect width="165" height="240" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect x="0" y="0" width="165" height="32" rx="10" fill="#d97706" />
+    <rect x="0" y="20" width="165" height="12" fill="#d97706" />
+    <text x="82" y="21" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700">GATE 4: CBT ENGINE</text>
+
+    <text x="12" y="55" class="gate-title">🧪 Uji Beban 100+</text>
+    <text x="12" y="75" class="gate-desc">• Submit serentak</text>
+    <text x="12" y="92" class="gate-desc">• Redis lock lancar</text>
+    <text x="12" y="109" class="gate-desc">• Nol data hilang</text>
+    
+    <rect x="12" y="195" width="141" height="28" rx="6" fill="#dcfce7" stroke="#16a34a" />
+    <text x="82" y="213" text-anchor="middle" fill="#15803d" class="btn-text">✅ Stress Passed</text>
+  </g>
+
+  <!-- Arrow 4 to 5 -->
+  <path d="M 780 225 L 795 225" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Checkpoint 5 -->
+  <g transform="translate(800, 105)" filter="url(#shadow)">
+    <rect width="120" height="240" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect x="0" y="0" width="120" height="32" rx="10" fill="#16a34a" />
+    <rect x="0" y="20" width="120" height="12" fill="#16a34a" />
+    <text x="60" y="21" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700">GATE 5</text>
+
+    <text x="10" y="55" class="gate-title">⚙️ Workers</text>
+    <text x="10" y="75" class="gate-desc">• Supervisor</text>
+    <text x="10" y="92" class="gate-desc">• Auto-backup</text>
+    <text x="10" y="109" class="gate-desc">• Log rotate</text>
+    
+    <rect x="10" y="195" width="100" height="28" rx="6" fill="#dcfce7" stroke="#16a34a" />
+    <text x="60" y="213" text-anchor="middle" fill="#15803d" class="btn-text">✅ Active</text>
+  </g>
+
+  <!-- FINAL RESULT BANNER -->
+  <g transform="translate(40, 380)" filter="url(#shadow)">
+    <rect width="880" height="90" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+    <circle cx="50" cy="45" r="22" fill="#16a34a" />
+    <text x="50" y="52" text-anchor="middle" font-size="18" fill="#ffffff">🎉</text>
+    <text x="90" y="38" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="700" fill="#14532d">SEMUA GATE LOLOS 100%: SISTEM SIAP SERAH TERIMA &amp; TANDA TANGAN BAST</text>
+    <text x="90" y="60" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" fill="#166534">Kredensial diserahkan secara resmi, garansi bugfix 3 bulan (Beli Putus) / SLA 99.9% (SaaS) mulai aktif.</text>
+  </g>
+</svg>

@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .node-title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 13.5px; font-weight: 700; fill: #0f172a; }
+      .node-desc { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 11.5px; fill: #475569; }
+      .badge { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 700; }
+    </style>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.06" />
+    </filter>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706" />
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#16a34a" />
+    </marker>
+  </defs>
+
+  <rect width="960" height="580" fill="#f8fafc" rx="16" />
+
+  <text x="40" y="45" class="title">Diagram Alur Master Serah Terima Sistem (Handover)</text>
+  <text x="40" y="68" class="subtitle">Perbandingan Jalur Serah Terima Beli Putus (On-Premise) vs Berlangganan (SaaS)</text>
+
+  <!-- TOP ROOT: DEAL KONTRAK -->
+  <g transform="translate(260, 95)" filter="url(#shadow)">
+    <rect width="440" height="60" rx="30" fill="#1e293b" />
+    <circle cx="35" cy="30" r="18" fill="#3b82f6" />
+    <text x="35" y="36" text-anchor="middle" font-size="16">🤝</text>
+    <text x="65" y="27" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700" fill="#ffffff">1. KESEPAKATAN KONTRAK &amp; PEMBAYARAN</text>
+    <text x="65" y="45" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" fill="#94a3b8">Verifikasi Administrasi &amp; Penentuan Skema Lisensi Sekolah</text>
+  </g>
+
+  <!-- SPLIT ARROWS -->
+  <path d="M 400 155 L 240 200" fill="none" stroke="#d97706" stroke-width="2.5" marker-end="url(#arrow-amber)" />
+  <path d="M 560 155 L 720 200" fill="none" stroke="#0284c7" stroke-width="2.5" marker-end="url(#arrow-blue)" />
+
+  <!-- LEFT LANE: BELI PUTUS -->
+  <g transform="translate(40, 205)" filter="url(#shadow)">
+    <rect width="420" height="210" rx="12" fill="#ffffff" stroke="#fde68a" stroke-width="2" />
+    <rect x="0" y="0" width="420" height="34" rx="12" fill="#d97706" />
+    <rect x="0" y="22" width="420" height="12" fill="#d97706" />
+    <text x="210" y="22" text-anchor="middle" fill="#ffffff" class="badge">💼 JALUR BELI PUTUS (ON-PREMISE)</text>
+
+    <g transform="translate(20, 48)">
+      <text x="0" y="15" class="node-title">🛠️ 2.A. Deploy di Server Lokal / VPS Sekolah</text>
+      <text x="0" y="32" class="node-desc">Pemasangan stack, DB migration &amp; SSL lokal</text>
+    </g>
+
+    <g transform="translate(20, 98)">
+      <text x="0" y="15" class="node-title">🔐 3.A. Injeksi Lisensi RSA (aksaraedu.lic)</text>
+      <text x="0" y="32" class="node-desc">Sistem berjalan 100% offline tanpa internet</text>
+    </g>
+
+    <g transform="translate(20, 148)">
+      <text x="0" y="15" class="node-title">🔑 4.A. Serah Terima Akses Server &amp; DB</text>
+      <text x="0" y="32" class="node-desc">Penyerahan password root &amp; Superadmin LMS</text>
+    </g>
+  </g>
+
+  <!-- RIGHT LANE: SAAS -->
+  <g transform="translate(500, 205)" filter="url(#shadow)">
+    <rect width="420" height="210" rx="12" fill="#ffffff" stroke="#bae6fd" stroke-width="2" />
+    <rect x="0" y="0" width="420" height="34" rx="12" fill="#0284c7" />
+    <rect x="0" y="22" width="420" height="12" fill="#0284c7" />
+    <text x="210" y="22" text-anchor="middle" fill="#ffffff" class="badge">☁️ JALUR BERLANGGANAN (SAAS CLOUD)</text>
+
+    <g transform="translate(20, 48)">
+      <text x="0" y="15" class="node-title">🌐 2.B. Provisi Instans Cloud &amp; Domain</text>
+      <text x="0" y="32" class="node-desc">Pemberian subdomain sekolah.aksaraedu.id</text>
+    </g>
+
+    <g transform="translate(20, 98)">
+      <text x="0" y="15" class="node-title">🔑 3.B. Inject Token API &amp; Setup Heartbeat</text>
+      <text x="0" y="32" class="node-desc">Siklus telemetri harian &amp; auto-sync rilis</text>
+    </g>
+
+    <g transform="translate(20, 148)">
+      <text x="0" y="15" class="node-title">📥 4.B. Migrasi &amp; Import Data Master</text>
+      <text x="0" y="32" class="node-desc">Import siswa, guru &amp; rombel via Excel Dapodik</text>
+    </g>
+  </g>
+
+  <!-- CONVERGE ARROWS TO BAST -->
+  <path d="M 250 415 L 420 455" fill="none" stroke="#d97706" stroke-width="2.5" marker-end="url(#arrow-green)" />
+  <path d="M 710 415 L 540 455" fill="none" stroke="#0284c7" stroke-width="2.5" marker-end="url(#arrow-green)" />
+
+  <!-- BOTTOM NODE: BAST SIGN & WARRANTY -->
+  <g transform="translate(180, 460)" filter="url(#shadow)">
+    <rect width="600" height="90" rx="14" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+    <circle cx="45" cy="45" r="22" fill="#16a34a" />
+    <text x="45" y="52" text-anchor="middle" font-size="18">📝</text>
+    
+    <text x="80" y="35" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="700" fill="#14532d">5. PENANDATANGANAN BAST RESMI (2 RANGKAP BERMATERAI)</text>
+    <text x="80" y="55" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" fill="#166534">• Beli Putus: Garansi Bugfix 3 Bulan Langsung Aktif</text>
+    <text x="80" y="72" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" fill="#166534">• Langganan SaaS: Penerbitan SLA Uptime 99.9% Cloud Terkelola</text>
+  </g>
+</svg>

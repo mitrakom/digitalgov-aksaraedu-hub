@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .box-title { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 15px; font-weight: 700; fill: #1e293b; }
+      .box-desc { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 12px; fill: #475569; line-height: 1.4; }
+      .badge { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 600; }
+      .arrow-text { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 600; fill: #0284c7; }
+    </style>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.08" />
+    </filter>
+    <linearGradient id="hubGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="bpGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fffbeb" />
+      <stop offset="100%" stop-color="#fef3c7" />
+    </linearGradient>
+    <linearGradient id="saasGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f0f9ff" />
+      <stop offset="100%" stop-color="#e0f2fe" />
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="480" fill="#f8fafc" rx="16" />
+  
+  <!-- Header -->
+  <text x="40" y="45" class="title">Topologi Ekosistem & Arsitektur AksaraEdu</text>
+  <text x="40" y="68" class="subtitle">Hubungan Komunikasi Pusat (Vendor HQ) dengan Instans Sekolah (Beli Putus vs Berlangganan)</text>
+
+  <!-- CENTRAL HUB (HQ) -->
+  <g transform="translate(40, 100)" filter="url(#shadow)">
+    <rect width="880" height="110" rx="12" fill="url(#hubGrad)" />
+    <circle cx="45" cy="55" r="22" fill="#3b82f6" opacity="0.2" />
+    <text x="45" y="61" text-anchor="middle" font-size="20">🏢</text>
+    <text x="85" y="45" font-family="'Plus Jakarta Sans', sans-serif" font-size="17" font-weight="700" fill="#ffffff">AksaraEdu Central Hub (Vendor HQ)</text>
+    <text x="85" y="68" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" fill="#94a3b8">Master Licensing Authority (RSA-4096) • Release Patch Registry • Telemetry & CRM • Helpdesk SLA</text>
+    
+    <!-- Badges inside Hub -->
+    <rect x="85" y="78" width="130" height="20" rx="4" fill="#334155" />
+    <text x="150" y="92" text-anchor="middle" fill="#38bdf8" class="badge">RSA Private Key Engine</text>
+
+    <rect x="225" y="78" width="130" height="20" rx="4" fill="#334155" />
+    <text x="290" y="92" text-anchor="middle" fill="#4ade80" class="badge">API Gateway Throttle</text>
+
+    <rect x="365" y="78" width="130" height="20" rx="4" fill="#334155" />
+    <text x="430" y="92" text-anchor="middle" fill="#facc15" class="badge">Update Distribution</text>
+  </g>
+
+  <!-- LEFT: BELI PUTUS (ON-PREMISE) -->
+  <g transform="translate(40, 270)" filter="url(#shadow)">
+    <rect width="420" height="170" rx="12" fill="url(#bpGrad)" stroke="#f59e0b" stroke-width="1.5" />
+    <rect x="20" y="-12" width="180" height="24" rx="12" fill="#d97706" />
+    <text x="110" y="4" text-anchor="middle" fill="#ffffff" class="badge">💼 MODEL BELI PUTUS (ON-PREMISE)</text>
+    
+    <text x="25" y="42" class="box-title">🏫 Server Lokal / VPS Sekolah</text>
+    <text x="25" y="65" class="box-desc">• Hak Pakai Seumur Hidup (Perpetual License)</text>
+    <text x="25" y="85" class="box-desc">• 100% Offline Capable via Verifikasi RSA Public Key</text>
+    <text x="25" y="105" class="box-desc">• Database Mandiri di Lingkungan Internal Sekolah</text>
+    <text x="25" y="125" class="box-desc">• Termasuk Garansi Bugfix Resmi 3 Bulan (Bisa Perpanjang)</text>
+    
+    <rect x="25" y="138" width="190" height="20" rx="4" fill="#fef3c7" stroke="#d97706" />
+    <text x="120" y="152" text-anchor="middle" fill="#b45309" class="badge">🛡️ Zero Phoning Home Required</text>
+  </g>
+
+  <!-- RIGHT: BERLANGGANAN (SAAS) -->
+  <g transform="translate(500, 270)" filter="url(#shadow)">
+    <rect width="420" height="170" rx="12" fill="url(#saasGrad)" stroke="#0284c7" stroke-width="1.5" />
+    <rect x="20" y="-12" width="180" height="24" rx="12" fill="#0284c7" />
+    <text x="110" y="4" text-anchor="middle" fill="#ffffff" class="badge">☁️ MODEL BERLANGGANAN (SAAS)</text>
+    
+    <text x="25" y="42" class="box-title">🌐 AksaraEdu Managed Cloud</text>
+    <text x="25" y="65" class="box-desc">• Sewa Layanan Tahunan Terjangkau (OpEx)</text>
+    <text x="25" y="85" class="box-desc">• Auto-Sync Pembaruan Patch & Kurikulum Baru</text>
+    <text x="25" y="105" class="box-desc">• Sinkronisasi Sinyal Heartbeat Telemetri Setiap 24 Jam</text>
+    <text x="25" y="125" class="box-desc">• Jaminan Uptime 99.9% & Backup Cloud Terkelola</text>
+
+    <rect x="25" y="138" width="190" height="20" rx="4" fill="#e0f2fe" stroke="#0284c7" />
+    <text x="120" y="152" text-anchor="middle" fill="#0369a1" class="badge">🔄 Full Managed & Auto-Updated</text>
+  </g>
+
+  <!-- CONNECTORS -->
+  <!-- Left Connector (Beli Putus) -->
+  <path d="M 250 210 L 250 265" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrow)" />
+  <rect x="160" y="225" width="180" height="22" rx="4" fill="#ffffff" stroke="#d97706" />
+  <text x="250" y="240" text-anchor="middle" font-size="10" font-weight="600" fill="#b45309">1x Injeksi aksaraedu.lic</text>
+
+  <!-- Right Connector (SaaS) -->
+  <path d="M 710 210 L 710 265" fill="none" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow)" />
+  <rect x="620" y="225" width="180" height="22" rx="4" fill="#ffffff" stroke="#0284c7" />
+  <text x="710" y="240" text-anchor="middle" font-size="10" font-weight="600" fill="#0369a1">Heartbeat 24 Jam &amp; Auto Sync</text>
+</svg>
