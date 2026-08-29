@@ -14,7 +14,8 @@ class RilisController extends Controller
 {
     public function __construct(
         protected LicenseSignerService $licenseSigner
-    ) {}
+    ) {
+    }
 
     public function index(): Response
     {
@@ -39,7 +40,7 @@ class RilisController extends Controller
             'checksum_sha256' => 'nullable|string|max:64',
         ]);
 
-        $checksum = $validated['checksum_sha256'] ?: hash('sha256', $validated['nomor_versi'] . now());
+        $checksum = $validated['checksum_sha256'] ?: hash('sha256', $validated['nomor_versi'].now());
 
         // Digital signature for release integrity
         $fileSignature = $this->licenseSigner->signPayload([

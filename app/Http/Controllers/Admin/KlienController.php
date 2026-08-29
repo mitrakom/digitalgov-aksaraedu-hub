@@ -20,10 +20,10 @@ class KlienController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('nama_sekolah', 'like', "%{$search}%")
-                  ->orWhere('npsn', 'like', "%{$search}%")
-                  ->orWhere('provinsi', 'like', "%{$search}%")
-                  ->orWhere('kabupaten_kota', 'like', "%{$search}%")
-                  ->orWhere('nama_pic', 'like', "%{$search}%");
+                    ->orWhere('npsn', 'like', "%{$search}%")
+                    ->orWhere('provinsi', 'like', "%{$search}%")
+                    ->orWhere('kabupaten_kota', 'like', "%{$search}%")
+                    ->orWhere('nama_pic', 'like', "%{$search}%");
             });
         }
 

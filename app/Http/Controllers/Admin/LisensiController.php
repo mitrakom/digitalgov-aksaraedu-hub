@@ -26,12 +26,12 @@ class LisensiController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('nomor_lisensi', 'like', "%{$search}%")
-                  ->orWhere('serial_key', 'like', "%{$search}%")
-                  ->orWhere('domain_terdaftar', 'like', "%{$search}%")
-                  ->orWhereHas('klienSekolah', function ($sq) use ($search) {
-                      $sq->where('nama_sekolah', 'like', "%{$search}%")
-                         ->orWhere('npsn', 'like', "%{$search}%");
-                  });
+                    ->orWhere('serial_key', 'like', "%{$search}%")
+                    ->orWhere('domain_terdaftar', 'like', "%{$search}%")
+                    ->orWhereHas('klienSekolah', function ($sq) use ($search) {
+                        $sq->where('nama_sekolah', 'like', "%{$search}%")
+                            ->orWhere('npsn', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -148,7 +148,7 @@ class LisensiController extends Controller
         $lisensi->signed_license_payload = $this->licenseSigner->generateSignedLicensePayload($lisensi);
         $lisensi->save();
 
-        return redirect()->back()->with('success', 'Masa aktif lisensi berhasil diperpanjang hingga ' . $newExpiry->format('d M Y'));
+        return redirect()->back()->with('success', 'Masa aktif lisensi berhasil diperpanjang hingga '.$newExpiry->format('d M Y'));
     }
 
     public function resetHardware(string $id): RedirectResponse

@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\KlienSekolah;
-use App\Models\Lisensi;
 use App\Models\RilisPembaruan;
 use App\Models\TelemetriHeartbeat;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 

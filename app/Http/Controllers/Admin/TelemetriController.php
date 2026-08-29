@@ -17,12 +17,12 @@ class TelemetriController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('ip_address', 'like', "%{$search}%")
-                  ->orWhere('domain_terdeteksi', 'like', "%{$search}%")
-                  ->orWhere('versi_lms', 'like', "%{$search}%")
-                  ->orWhereHas('lisensi.klienSekolah', function ($sq) use ($search) {
-                      $sq->where('nama_sekolah', 'like', "%{$search}%")
-                         ->orWhere('npsn', 'like', "%{$search}%");
-                  });
+                    ->orWhere('domain_terdeteksi', 'like', "%{$search}%")
+                    ->orWhere('versi_lms', 'like', "%{$search}%")
+                    ->orWhereHas('lisensi.klienSekolah', function ($sq) use ($search) {
+                        $sq->where('nama_sekolah', 'like', "%{$search}%")
+                            ->orWhere('npsn', 'like', "%{$search}%");
+                    });
             });
         }
 

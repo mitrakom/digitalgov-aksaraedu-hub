@@ -34,7 +34,7 @@ class LeadApiController extends Controller
             ], 422);
         }
 
-        $demoSlug = Str::slug($request->input('nama_sekolah')) . '-' . Str::random(5);
+        $demoSlug = Str::slug($request->input('nama_sekolah')).'-'.Str::random(5);
         $demoUrl = "https://demo.aksaraedu.id/{$demoSlug}";
 
         $lead = LeadsDemo::create([

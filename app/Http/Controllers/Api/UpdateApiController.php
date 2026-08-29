@@ -15,7 +15,8 @@ class UpdateApiController extends Controller
 {
     public function __construct(
         protected LicenseSignerService $licenseSigner
-    ) {}
+    ) {
+    }
 
     /**
      * Cek Update Registry (GET /api/v1/updates/check)
@@ -106,8 +107,8 @@ class UpdateApiController extends Controller
             'downloaded_at' => now(),
         ]);
 
-        if ($release->file_path_zip && file_exists(storage_path('app/' . $release->file_path_zip))) {
-            return response()->download(storage_path('app/' . $release->file_path_zip));
+        if ($release->file_path_zip && file_exists(storage_path('app/'.$release->file_path_zip))) {
+            return response()->download(storage_path('app/'.$release->file_path_zip));
         }
 
         return response()->json([

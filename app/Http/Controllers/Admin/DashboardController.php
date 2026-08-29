@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\KlienSekolah;
 use App\Models\LeadsDemo;
 use App\Models\Lisensi;
-use App\Models\RilisPembaruan;
 use App\Models\TelemetriHeartbeat;
 use App\Models\TiketDukungan;
 use Inertia\Inertia;

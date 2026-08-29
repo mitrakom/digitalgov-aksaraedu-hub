@@ -18,7 +18,8 @@ class LicenseApiController extends Controller
 {
     public function __construct(
         protected LicenseSignerService $licenseSigner
-    ) {}
+    ) {
+    }
 
     /**
      * Aktivasi Lisensi Awal (POST /api/v1/license/activate)
@@ -56,8 +57,8 @@ class LicenseApiController extends Controller
         $lisensi = Lisensi::where('klien_sekolah_id', $klien->id)
             ->where(function ($q) use ($token) {
                 $q->where('serial_key', $token)
-                  ->orWhere('token_api', $token)
-                  ->orWhere('nomor_lisensi', $token);
+                    ->orWhere('token_api', $token)
+                    ->orWhere('nomor_lisensi', $token);
             })
             ->first();
 
@@ -187,7 +188,7 @@ class LicenseApiController extends Controller
         $announcement = Pengumuman::active()
             ->where(function ($q) use ($lisensi) {
                 $q->where('target_model', 'semua')
-                  ->orWhere('target_model', $lisensi->model_lisensi);
+                    ->orWhere('target_model', $lisensi->model_lisensi);
             })
             ->latest()
             ->first();

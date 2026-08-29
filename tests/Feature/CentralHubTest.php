@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\KlienSekolah;
 use App\Models\Lisensi;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -86,7 +85,7 @@ class CentralHubTest extends TestCase
             ],
         ];
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $lisensi->token_api)
+        $response = $this->withHeader('Authorization', 'Bearer '.$lisensi->token_api)
             ->postJson('/api/v1/license/heartbeat', $payload);
 
         $response->assertStatus(200)

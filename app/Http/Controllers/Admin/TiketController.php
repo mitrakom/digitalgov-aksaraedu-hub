@@ -27,10 +27,10 @@ class TiketController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('nomor_tiket', 'like', "%{$search}%")
-                  ->orWhere('judul_masalah', 'like', "%{$search}%")
-                  ->orWhereHas('klienSekolah', function ($sq) use ($search) {
-                      $sq->where('nama_sekolah', 'like', "%{$search}%");
-                  });
+                    ->orWhere('judul_masalah', 'like', "%{$search}%")
+                    ->orWhereHas('klienSekolah', function ($sq) use ($search) {
+                        $sq->where('nama_sekolah', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -62,7 +62,7 @@ class TiketController extends Controller
         $slaDeadline = $isGaransi ? now()->addHours(24) : now()->addHours(72);
 
         $count = TiketDukungan::count() + 1;
-        $nomorTiket = 'TKT-' . date('Y') . '-' . str_pad((string) $count, 4, '0', STR_PAD_LEFT);
+        $nomorTiket = 'TKT-'.date('Y').'-'.str_pad((string) $count, 4, '0', STR_PAD_LEFT);
 
         TiketDukungan::create([
             'klien_sekolah_id' => $klien->id,

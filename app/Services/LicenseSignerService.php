@@ -10,14 +10,16 @@ use Illuminate\Support\Str;
 class LicenseSignerService
 {
     protected string $keyPath;
+
     protected string $privateKeyFile;
+
     protected string $publicKeyFile;
 
     public function __construct()
     {
         $this->keyPath = storage_path('keys');
-        $this->privateKeyFile = $this->keyPath . '/license_private.key';
-        $this->publicKeyFile = $this->keyPath . '/license_public.key';
+        $this->privateKeyFile = $this->keyPath.'/license_private.key';
+        $this->publicKeyFile = $this->keyPath.'/license_public.key';
     }
 
     /**
@@ -56,7 +58,7 @@ class LicenseSignerService
 
         $res = openssl_pkey_new($config);
         if (! $res) {
-            throw new Exception('Gagal membuat kunci RSA: ' . openssl_error_string());
+            throw new Exception('Gagal membuat kunci RSA: '.openssl_error_string());
         }
 
         openssl_pkey_export($res, $privateKey);
@@ -81,6 +83,7 @@ class LicenseSignerService
     public function getPublicKey(): string
     {
         $this->ensureKeysExist();
+
         return File::get($this->publicKeyFile);
     }
 
@@ -98,14 +101,14 @@ class LicenseSignerService
         $success = openssl_sign($jsonPayload, $signature, $privateKey, OPENSSL_ALGO_SHA256);
 
         if (! $success) {
-            throw new Exception('Gagal menandatangani payload lisensi: ' . openssl_error_string());
+            throw new Exception('Gagal menandatangani payload lisensi: '.openssl_error_string());
         }
 
         // Package as format: base64(payload).base64(signature)
         $encodedPayload = base64_encode($jsonPayload);
         $encodedSignature = base64_encode($signature);
 
-        return $encodedPayload . '.' . $encodedSignature;
+        return $encodedPayload.'.'.$encodedSignature;
     }
 
     /**
@@ -127,6 +130,7 @@ class LicenseSignerService
 
         if ($verifyResult === 1) {
             $payload = json_decode($jsonPayload, true);
+
             return ['valid' => true, 'payload' => $payload];
         }
 
@@ -151,7 +155,7 @@ class LicenseSignerService
      */
     public function generateApiToken(): string
     {
-        return 'aksr_live_' . bin2hex(random_bytes(32));
+        return 'aksr_live_'.bin2hex(random_bytes(32));
     }
 
     /**

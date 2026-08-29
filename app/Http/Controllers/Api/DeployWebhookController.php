@@ -42,12 +42,12 @@ class DeployWebhookController extends Controller
 
         $outputLog = [];
         $basePath = base_path();
-        $zipFile = $basePath . '/deploy.zip';
+        $zipFile = $basePath.'/deploy.zip';
 
         // 1. Ekstraksi deploy.zip jika ada
         if (File::exists($zipFile)) {
             try {
-                $zip = new ZipArchive();
+                $zip = new ZipArchive;
                 if ($zip->open($zipFile) === true) {
                     $zip->extractTo($basePath);
                     $zip->close();
@@ -57,7 +57,7 @@ class DeployWebhookController extends Controller
                     $outputLog[] = '⚠️ Gagal membuka deploy.zip.';
                 }
             } catch (Exception $e) {
-                $outputLog[] = '⚠️ Ekstraksi zip error: ' . $e->getMessage();
+                $outputLog[] = '⚠️ Ekstraksi zip error: '.$e->getMessage();
             }
         } else {
             $outputLog[] = 'ℹ️ File deploy.zip tidak ditemukan (mungkin telah diekstrak sebelumnya).';
@@ -71,9 +71,9 @@ class DeployWebhookController extends Controller
         // 3. Database Migration
         try {
             Artisan::call('migrate', ['--force' => true]);
-            $outputLog[] = '✓ php artisan migrate: ' . trim(Artisan::output());
+            $outputLog[] = '✓ php artisan migrate: '.trim(Artisan::output());
         } catch (Exception $e) {
-            $outputLog[] = '⚠️ Migrasi gagal: ' . $e->getMessage();
+            $outputLog[] = '⚠️ Migrasi gagal: '.$e->getMessage();
         }
 
         // 4. Cache Optimizations
@@ -83,7 +83,7 @@ class DeployWebhookController extends Controller
             Artisan::call('view:cache');
             $outputLog[] = '✓ Optimasi cache (config, route, view) berhasil diterapkan.';
         } catch (Exception $e) {
-            $outputLog[] = '⚠️ Cache optimization warning: ' . $e->getMessage();
+            $outputLog[] = '⚠️ Cache optimization warning: '.$e->getMessage();
         }
 
         return response()->json([

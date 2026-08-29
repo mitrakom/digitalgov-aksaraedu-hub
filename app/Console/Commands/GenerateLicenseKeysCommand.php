@@ -32,6 +32,7 @@ class GenerateLicenseKeysCommand extends Command
             $this->warn('Membuat ulang kunci RSA-4096 (Force overwrite)...');
             $signer->generateNewKeyPair();
             $this->info('Kunci RSA-4096 baru berhasil dibuat di storage/keys/.');
+
             return Command::SUCCESS;
         }
 

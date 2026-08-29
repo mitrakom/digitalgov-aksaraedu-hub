@@ -22,9 +22,9 @@ class LeadsController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('nama_pemohon', 'like', "%{$search}%")
-                  ->orWhere('nama_sekolah', 'like', "%{$search}%")
-                  ->orWhere('nomor_wa', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('nama_sekolah', 'like', "%{$search}%")
+                    ->orWhere('nomor_wa', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
