@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DeployWebhookController;
 use App\Http\Controllers\Api\LeadApiController;
 use App\Http\Controllers\Api\LicenseApiController;
 use App\Http\Controllers\Api\UpdateApiController;
@@ -37,6 +38,5 @@ Route::prefix('v1')->group(function () {
 });
 
 // 6. Post-Deploy Webhook Trigger (Auto-Extract, Migrate, & Cache Optimization)
-Route::post('/deploy-webhook', [\App\Http\Controllers\Api\DeployWebhookController::class, 'handle'])
+Route::post('/deploy-webhook', [DeployWebhookController::class, 'handle'])
     ->middleware('throttle:10,1');
-

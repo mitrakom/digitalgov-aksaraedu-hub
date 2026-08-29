@@ -114,4 +114,27 @@ class CentralHubTest extends TestCase
         $response = $this->actingAs($user)->get('/admin');
         $response->assertStatus(200);
     }
+
+    public function test_deploy_webhook_rejects_invalid_token(): void
+    {
+        config(['app.deploy_webhook_secret' => 'TestSecretKey123']);
+
+        $response = $this->withHeader('X-Deploy-Token', 'WrongKey')
+            ->postJson('/api/deploy-webhook', ['token' => 'WrongKey']);
+
+        $response->assertStatus(403);
+    }
+
+    public function test_deploy_webhook_accepts_valid_token(): void
+    {
+        config(['app.deploy_webhook_secret' => 'TestSecretKey123']);
+
+        $response = $this->withHeader('X-Deploy-Token', 'TestSecretKey123')
+            ->postJson('/api/deploy-webhook', ['token' => 'TestSecretKey123']);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'status' => 'success',
+            ]);
+    }
 }
