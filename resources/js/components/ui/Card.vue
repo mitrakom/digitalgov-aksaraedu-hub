@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
+  <div class="bg-slate-900 border border-slate-800/80 rounded-2xl shadow-sm overflow-hidden">
     <slot />
   </div>
 </template>
