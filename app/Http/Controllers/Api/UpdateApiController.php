@@ -15,8 +15,7 @@ class UpdateApiController extends Controller
 {
     public function __construct(
         protected LicenseSignerService $licenseSigner
-    ) {
-    }
+    ) {}
 
     /**
      * Cek Update Registry (GET /api/v1/updates/check)

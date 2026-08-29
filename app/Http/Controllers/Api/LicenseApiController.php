@@ -11,15 +11,13 @@ use App\Models\TelemetriHeartbeat;
 use App\Services\LicenseSignerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class LicenseApiController extends Controller
 {
     public function __construct(
         protected LicenseSignerService $licenseSigner
-    ) {
-    }
+    ) {}
 
     /**
      * Aktivasi Lisensi Awal (POST /api/v1/license/activate)

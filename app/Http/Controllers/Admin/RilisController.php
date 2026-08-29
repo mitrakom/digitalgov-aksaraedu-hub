@@ -14,8 +14,7 @@ class RilisController extends Controller
 {
     public function __construct(
         protected LicenseSignerService $licenseSigner
-    ) {
-    }
+    ) {}
 
     public function index(): Response
     {
