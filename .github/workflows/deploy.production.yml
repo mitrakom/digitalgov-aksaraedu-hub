@@ -136,7 +136,7 @@ jobs:
           password: ${{ secrets.FTP_PROD_PASSWORD }}
           port: ${{ secrets.FTP_PROD_PORT || 21 }}
           local-dir: ./
-          server-dir: ./
+          server-dir: ${{ secrets.FTP_SERVER_DIR || './hub/' }}
           dangerous-clean-slate: false
           protocol: ftp
           security: loose
