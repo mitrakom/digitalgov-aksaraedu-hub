@@ -13,7 +13,7 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
         <x-inertia::head>
-            <title>{{ config('app.name', 'AksaraEdu Central Hubs') }}</title>
+            <title>{{ config('app.name', 'AksaraEdu Central Hub') }}</title>
         </x-inertia::head>
     </head>
     <body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen">
