@@ -184,6 +184,7 @@ jobs:
           exclude: |
             **
             !deploy.zip
+            !public/deploy-webhook.php
 
       # Step 9: Trigger Webhook (Auto-extract deploy.zip + migrate + cache optimizations)
       - name: Trigger Post-Deploy Webhook (Auto-Extract, Migrate & Cache)
