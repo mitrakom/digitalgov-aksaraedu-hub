@@ -55,11 +55,9 @@ jobs:
             yarn install --frozen-lockfile
             yarn build
           else
-            npm ci
+            npm ci --include=dev
             npm run build
           fi
-        env:
-          NODE_ENV: production
 
       # Step 6: Generate dynamic application version (CalVer + Time WITA / Makassar)
       - name: Generate dynamic application version (CalVer + Time WITA)
