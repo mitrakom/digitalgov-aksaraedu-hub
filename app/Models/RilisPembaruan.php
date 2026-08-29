@@ -6,7 +6,22 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property string $id
+ * @property string $nomor_versi
+ * @property string $tipe_rilis
+ * @property string $ringkasan_perubahan
+ * @property string|null $file_path_zip
+ * @property string|null $checksum_sha256
+ * @property string|null $file_signature
+ * @property string $minimal_versi_lms
+ * @property bool $is_public
+ * @property bool $is_critical_patch
+ * @property Carbon|null $published_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\RiwayatUpdate> $riwayatUpdates
+ */
 class RilisPembaruan extends Model
 {
     use HasFactory, HasUuids;

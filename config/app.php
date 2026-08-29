@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'deploy_webhook_secret' => env('DEPLOY_WEBHOOK_SECRET'),
+
 ];

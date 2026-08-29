@@ -22,12 +22,12 @@ class UpdateApiController extends Controller
      */
     public function check(Request $request): JsonResponse
     {
-        $currentVersion = $request->query('current_version', '1.0.0');
-        $npsn = $request->query('npsn');
-        $token = $request->query('token') ?: $request->bearerToken();
+        $currentVersion = (string) $request->query('current_version', '1.0.0');
+        $npsn = (string) $request->query('npsn');
+        $token = (string) ($request->query('token') ?: $request->bearerToken());
 
         $lisensi = null;
-        if ($token) {
+        if (! empty($token)) {
             $lisensi = Lisensi::with('klienSekolah')->where('token_api', $token)->first();
         }
 

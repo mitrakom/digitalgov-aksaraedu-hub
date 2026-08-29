@@ -20,7 +20,7 @@ class DeployWebhookController extends Controller
      */
     public function handle(Request $request): JsonResponse
     {
-        $expectedToken = config('app.deploy_webhook_secret') ?? env('DEPLOY_WEBHOOK_SECRET');
+        $expectedToken = config('app.deploy_webhook_secret');
 
         if (empty($expectedToken)) {
             return response()->json([

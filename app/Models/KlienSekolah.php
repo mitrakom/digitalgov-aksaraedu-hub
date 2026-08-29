@@ -7,6 +7,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property string $id
+ * @property string $npsn
+ * @property string $nama_sekolah
+ * @property string $tipe_sekolah
+ * @property string|null $yayasan_induk
+ * @property string $nama_pic
+ * @property string $kontak_pic_wa
+ * @property string $email_pic
+ * @property string $provinsi
+ * @property string $kabupaten_kota
+ * @property string|null $alamat_lengkap
+ * @property string $status_klien
+ * @property-read \App\Models\Lisensi|null $active_lisensi
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Lisensi> $lisensis
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TiketDukungan> $tiketDukungans
+ */
 class KlienSekolah extends Model
 {
     use HasFactory, HasUuids;

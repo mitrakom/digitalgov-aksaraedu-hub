@@ -7,7 +7,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property string $id
+ * @property string $klien_sekolah_id
+ * @property string $nomor_lisensi
+ * @property string $serial_key
+ * @property string $model_lisensi
+ * @property string $tier_paket
+ * @property string $token_api
+ * @property string|null $signed_license_payload
+ * @property string|null $domain_terdaftar
+ * @property string|null $hardware_fingerprint
+ * @property int $hardware_reset_count
+ * @property Carbon|null $tanggal_rilis
+ * @property Carbon|null $tanggal_kadaluarsa
+ * @property Carbon|null $garansi_bugfix_hingga
+ * @property string $status
+ * @property array<string>|null $allowed_features
+ * @property string|null $catatan_kontrak
+ * @property float $nilai_kontrak
+ * @property-read \App\Models\KlienSekolah $klienSekolah
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TelemetriHeartbeat> $telemetriHeartbeats
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\RiwayatUpdate> $riwayatUpdates
+ */
 class Lisensi extends Model
 {
     use HasFactory, HasUuids;
