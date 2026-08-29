@@ -193,7 +193,7 @@ jobs:
             echo "⚠️ PERINGATAN: DEPLOY_WEBHOOK_SECRET belum diisi di GitHub Secrets."
             echo "File deploy.zip telah ter-upload, namun auto-extract & migrasi otomatis tidak terpanggil."
           else
-            TARGET_WEBHOOK_URL="${{ secrets.DEPLOY_WEBHOOK_URL || 'https://hub.aksaraedu.id/api/deploy-webhook' }}"
+            TARGET_WEBHOOK_URL="${{ secrets.DEPLOY_WEBHOOK_URL || 'https://aksaraedu.digitalgov.id/deploy-webhook.php' }}"
             echo "Mengirim request ke: $TARGET_WEBHOOK_URL"
             
             RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST \
@@ -226,7 +226,7 @@ jobs:
       # Step 10: Verify deployed assets
       - name: Verify deployed assets
         run: |
-          TARGET_MANIFEST_URL="${{ secrets.DEPLOY_MANIFEST_URL || 'https://hub.aksaraedu.id/build/manifest.json' }}"
+          TARGET_MANIFEST_URL="${{ secrets.DEPLOY_MANIFEST_URL || 'https://aksaraedu.digitalgov.id/build/manifest.json' }}"
           response=$(curl -s -o /dev/null -w "%{http_code}" "$TARGET_MANIFEST_URL")
           if [ "$response" != "200" ]; then
             echo "⚠️ Asset manifest check returned: $response"
@@ -243,7 +243,7 @@ jobs:
           echo "📊 STATUS DEPLOYMENT: ${{ job.status }}"
           echo "🏷️ Versi Rilis:     ${{ env.APP_VERSION }}"
           echo "🏢 Aplikasi:        AksaraEdu Central Hub (Vendor HQ)"
-          echo "🌐 Target URL:      https://hub.aksaraedu.id"
+          echo "🌐 Target URL:      https://aksaraedu.digitalgov.id"
           echo "📌 Commit:          ${{ github.sha }}"
           echo "👤 Actor:           ${{ github.actor }}"
           echo "================================================"
