@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Lisensi;
+use App\Models\RilisPembaruan;
 use Exception;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Throwable;
 use ZipArchive;
 
 class BundleCustomizerService
@@ -61,20 +64,51 @@ class BundleCustomizerService
     }
 
     /**
-     * Find latest master release zip in releases directory.
+     * Find latest master release zip in releases directory or database registry.
      */
     protected function findMasterReleaseZip(): ?string
     {
+        // 1. Check from registered database releases
+        try {
+            $latestDbRelease = RilisPembaruan::whereNotNull('file_path_zip')
+                ->latest('published_at')
+                ->first();
+
+            if ($latestDbRelease && ! empty($latestDbRelease->file_path_zip)) {
+                $possibleDbPaths = [
+                    Storage::disk('local')->path($latestDbRelease->file_path_zip),
+                    storage_path('app/'.$latestDbRelease->file_path_zip),
+                    storage_path('app/private/'.$latestDbRelease->file_path_zip),
+                    public_path('releases/'.basename($latestDbRelease->file_path_zip)),
+                ];
+
+                foreach ($possibleDbPaths as $fullPath) {
+                    if (File::exists($fullPath) && is_file($fullPath)) {
+                        return $fullPath;
+                    }
+                }
+            }
+        } catch (Throwable) {
+            // Abaikan jika database belum siap
+        }
+
+        // 2. Scan physical directories for release zip files
         $searchPaths = [
+            storage_path('app/releases'),
+            storage_path('app/private/releases'),
+            base_path('releases'),
             base_path('../releases'),
             base_path('../../releases'),
-            base_path('releases'),
-            storage_path('app/releases'),
+            public_path('releases'),
         ];
 
         foreach ($searchPaths as $path) {
             if (File::isDirectory($path)) {
-                $files = glob("{$path}/aksaraedu-lms-*-release.zip");
+                $files = glob("{$path}/aksaraedu-lms-*.zip");
+                if (empty($files)) {
+                    $files = glob("{$path}/*.zip");
+                }
+
                 if (! empty($files)) {
                     // Get latest file by modification time
                     usort($files, fn ($a, $b) => filemtime($b) <=> filemtime($a));
