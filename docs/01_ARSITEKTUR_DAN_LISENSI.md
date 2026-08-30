@@ -1,6 +1,6 @@
 # 01. Arsitektur Sistem & Spesifikasi Lisensi
 
-Dokumen ini menjelaskan rancangan arsitektur teknis **AksaraEdu Central Hub**, sistem lisensi berbasis kriptografi asimetris RSA-4096, serta perbedaan mendasar antara skema **Beli Putus (On-Premise)** dan **Berlangganan (SaaS)**.
+Dokumen ini menjelaskan rancangan arsitektur teknis terbaru **AksaraEdu Central Hub**, sistem lisensi berbasis kriptografi asimetris RSA-4096, serta perbedaan mendasar antara skema **Beli Putus (On-Premise)** dan **Berlangganan (SaaS)**.
 
 ---
 
