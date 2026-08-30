@@ -26,7 +26,7 @@ jobs:
     steps:
       # Step 1: Checkout repository
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Step 2: Setup PHP 8.3 with required extensions for Central Hub
       - name: Setup PHP 8.3
@@ -133,7 +133,7 @@ jobs:
 
       # Step 10: Upload deploy.zip via FTP (Only 1 file uploaded - Fast & 100% reliable)
       - name: Upload deploy.zip to Production FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_PROD_HOST }}
           username: ${{ secrets.FTP_PROD_USER }}
