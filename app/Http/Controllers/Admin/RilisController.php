@@ -22,9 +22,26 @@ class RilisController extends Controller
             ->latest('published_at')
             ->paginate(10);
 
+        $recentDownloads = \App\Models\RiwayatUpdate::with(['rilisPembaruan', 'lisensi.klienSekolah'])
+            ->latest('downloaded_at')
+            ->take(15)
+            ->get();
+
         return Inertia::render('admin/rilis/Index', [
             'releases' => $releases,
+            'recentDownloads' => $recentDownloads,
         ]);
+    }
+
+    public function download(string $id): \Symfony\Component\HttpFoundation\BinaryFileResponse|RedirectResponse
+    {
+        $release = RilisPembaruan::findOrFail($id);
+
+        if ($release->file_path_zip && file_exists(storage_path('app/'.$release->file_path_zip))) {
+            return response()->download(storage_path('app/'.$release->file_path_zip));
+        }
+
+        return back()->with('error', 'Berkas .zip fisik belum diunggah atau tidak ditemukan di storage server.');
     }
 
     public function store(Request $request): RedirectResponse

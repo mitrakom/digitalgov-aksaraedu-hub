@@ -20,6 +20,7 @@ import {
 
 interface Props {
   releases: any
+  recentDownloads?: any[]
 }
 
 defineProps<Props>()
@@ -98,10 +99,19 @@ const deleteRelease = (id: string, version: string) => {
             </div>
 
             <div class="flex items-center gap-2">
-              <span class="text-xs text-slate-400 flex items-center gap-1">
+              <span class="text-xs text-slate-400 flex items-center gap-1 mr-2">
                 <Calendar class="w-3.5 h-3.5 text-slate-500" />
                 {{ rel.published_at ? new Date(rel.published_at).toLocaleDateString('id-ID') : '-' }}
               </span>
+              <a
+                v-if="rel.file_path_zip"
+                :href="`/admin/rilis/${rel.id}/download`"
+                target="_blank"
+                class="inline-flex items-center px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 transition-colors"
+                title="Unduh Berkas ZIP Rilis"
+              >
+                <Download class="w-3.5 h-3.5 mr-1" /> Unduh ZIP
+              </a>
               <Button @click="deleteRelease(rel.id, rel.nomor_versi)" variant="ghost" size="sm" class="text-rose-400 hover:text-rose-300">
                 <Trash2 class="w-4 h-4" />
               </Button>
@@ -127,6 +137,60 @@ const deleteRelease = (id: string, version: string) => {
           Belum ada rilis versi software di repository pusat.
         </div>
       </div>
+
+      <!-- Recent Client Update Audit Trail -->
+      <Card class="bg-slate-900 border-slate-800 p-6 mt-8">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <CheckCircle2 class="w-4 h-4 text-emerald-400" />
+              Riwayat Log Unduhan Klien (Update Audit Trail)
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Log sinkronisasi dan unduhan paket rilis oleh instans LMS sekolah klien.
+            </p>
+          </div>
+          <Badge variant="info" size="sm">{{ recentDownloads?.length || 0 }} Log Terakhir</Badge>
+        </div>
+
+        <div class="overflow-x-auto mt-4">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950/60 text-[11px] font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="px-4 py-3">Waktu Unduh</th>
+                <th class="px-4 py-3">Sekolah / Klien</th>
+                <th class="px-4 py-3">NPSN</th>
+                <th class="px-4 py-3">Versi Rilis</th>
+                <th class="px-4 py-3">IP Address</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-mono">
+              <tr v-for="item in recentDownloads" :key="item.id" class="hover:bg-slate-800/40">
+                <td class="px-4 py-3 text-slate-400 whitespace-nowrap">
+                  {{ item.downloaded_at ? new Date(item.downloaded_at).toLocaleString('id-ID') : '-' }}
+                </td>
+                <td class="px-4 py-3 font-sans font-medium text-white whitespace-nowrap">
+                  {{ item.lisensi?.klien_sekolah?.nama_sekolah || 'Instans Klien Terlisensi' }}
+                </td>
+                <td class="px-4 py-3 text-emerald-400 whitespace-nowrap">
+                  {{ item.lisensi?.klien_sekolah?.npsn || item.lisensi?.nomor_lisensi || '-' }}
+                </td>
+                <td class="px-4 py-3 whitespace-nowrap">
+                  <Badge variant="success" size="sm">v{{ item.rilis_pembaruan?.nomor_versi || '-' }}</Badge>
+                </td>
+                <td class="px-4 py-3 text-slate-400 whitespace-nowrap">
+                  {{ item.ip_address || '127.0.0.1' }}
+                </td>
+              </tr>
+              <tr v-if="!recentDownloads || recentDownloads.length === 0">
+                <td colspan="5" class="px-4 py-8 text-center text-xs text-slate-500 font-sans">
+                  Belum ada log unduhan update dari klien.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Card>
     </div>
 
     <!-- Modal Publish Release -->

@@ -138,7 +138,36 @@ Memungkinkan publik, dinas pendidikan, atau yayasan memverifikasi keaslian lisen
 
 ---
 
-### 2.5. Demo Instant & Lead Generator (`POST /api/v1/leads/demo`)
+### 2.5. Publikasi Paket Rilis Otomatis via CI/CD (`POST /api/v1/updates/publish`)
+Digunakan oleh GitHub Actions CI/CD Pipeline untuk mengunggah paket `.zip` rilis baru, menandatangani hash dengan RSA-4096, dan mendaftarkannya ke database registry `@hub`.
+
+* **Request Header**:
+  * `X-Deploy-Token: <DEPLOY_WEBHOOK_SECRET>`
+  * `Content-Type: multipart/form-data`
+* **Form Fields**:
+  * `nomor_versi` *(required)*: Tag versi (misal: `v1.2.0`).
+  * `tipe_rilis` *(optional)*: `patch_bugfix` | `minor_feature` | `major_curriculum`.
+  * `ringkasan_perubahan` *(optional)*: Catatan rilis/changelog.
+  * `checksum_sha256` *(optional)*: SHA-256 hash file zip.
+  * `file` *(optional)*: Berkas `.zip` bundle rilis (max 300MB).
+* **Response 201 Created**:
+  ```json
+  {
+    "status": "success",
+    "message": "Paket rilis v1.2.0 berhasil dipublikasikan ke Registry Central Hub.",
+    "data": {
+      "nomor_versi": "v1.2.0",
+      "tipe_rilis": "patch_bugfix",
+      "checksum_sha256": "4a5c891...e90",
+      "file_path_zip": "releases/aksaraedu-lms-v1.2.0.zip",
+      "published_at": "2026-08-30T09:40:00+08:00"
+    }
+  }
+  ```
+
+---
+
+### 2.6. Demo Instant & Lead Generator (`POST /api/v1/leads/demo`)
 Membuat instans sandbox demo instan berdurasi 2 jam bagi calon pengguna.
 
 * **Request Body**:

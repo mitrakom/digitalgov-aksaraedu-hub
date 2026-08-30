@@ -117,4 +117,77 @@ class UpdateApiController extends Controller
             'file_signature' => $release->file_signature,
         ]);
     }
+
+    /**
+     * Publikasi Otomatis Rilis Baru via CI/CD (POST /api/v1/updates/publish)
+     */
+    public function publish(Request $request): JsonResponse
+    {
+        $expectedToken = config('app.deploy_webhook_secret');
+        $providedToken = $request->header('X-Deploy-Token')
+            ?? $request->bearerToken()
+            ?? $request->input('token');
+
+        if (empty($expectedToken) || ! hash_equals($expectedToken, (string) $providedToken)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Akses ditolak: Token autentikasi deploy webhook tidak valid.',
+            ], 403);
+        }
+
+        $validated = $request->validate([
+            'nomor_versi' => 'required|string|max:30',
+            'tipe_rilis' => 'nullable|in:patch_bugfix,minor_feature,major_curriculum',
+            'ringkasan_perubahan' => 'nullable|string',
+            'minimal_versi_lms' => 'nullable|string|max:30',
+            'checksum_sha256' => 'nullable|string|max:64',
+            'file' => 'nullable|file|mimes:zip|max:307200', // max 300MB
+        ]);
+
+        $filePath = null;
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->storeAs('releases', 'aksaraedu-lms-'.$validated['nomor_versi'].'.zip');
+            if (empty($validated['checksum_sha256'])) {
+                $validated['checksum_sha256'] = hash_file('sha256', storage_path('app/'.$filePath));
+            }
+        }
+
+        $checksum = $validated['checksum_sha256'] ?? hash('sha256', $validated['nomor_versi'].now());
+
+        // Digital signature RSA-4096 untuk integritas rilis
+        $fileSignature = $this->licenseSigner->signPayload([
+            'nomor_versi' => $validated['nomor_versi'],
+            'checksum_sha256' => $checksum,
+            'published_at' => now()->toIso8601String(),
+        ]);
+
+        $release = RilisPembaruan::updateOrCreate(
+            ['nomor_versi' => $validated['nomor_versi']],
+            [
+                'tipe_rilis' => $validated['tipe_rilis'] ?? 'patch_bugfix',
+                'ringkasan_perubahan' => $validated['ringkasan_perubahan'] ?? "Rilis otomatis versi {$validated['nomor_versi']} via GitHub Actions CI/CD pipeline.",
+                'minimal_versi_lms' => $validated['minimal_versi_lms'] ?? '1.0.0',
+                'is_public' => true,
+                'is_critical_patch' => false,
+                'file_path_zip' => $filePath,
+                'checksum_sha256' => $checksum,
+                'file_signature' => $fileSignature,
+                'published_at' => now(),
+            ]
+        );
+
+        return response()->json([
+            'status' => 'success',
+            'message' => "Paket rilis v{$release->nomor_versi} berhasil dipublikasikan ke Registry Central Hub.",
+            'data' => [
+                'id' => $release->id,
+                'nomor_versi' => $release->nomor_versi,
+                'tipe_rilis' => $release->tipe_rilis,
+                'checksum_sha256' => $release->checksum_sha256,
+                'file_path_zip' => $release->file_path_zip,
+                'published_at' => $release->published_at?->toIso8601String(),
+            ],
+        ], 201);
+    }
 }
+

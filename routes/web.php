@@ -55,6 +55,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     // Release Repository Manager
     Route::get('/rilis', [RilisController::class, 'index'])->name('rilis.index');
     Route::post('/rilis', [RilisController::class, 'store'])->name('rilis.store');
+    Route::get('/rilis/{id}/download', [RilisController::class, 'download'])->name('rilis.download');
     Route::delete('/rilis/{id}', [RilisController::class, 'destroy'])->name('rilis.destroy');
 
     // Support Helpdesk & SLA Tracker

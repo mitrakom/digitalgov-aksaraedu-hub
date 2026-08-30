@@ -246,3 +246,34 @@ Tambahkan pada crontab user `www-data` (`sudo crontab -u www-data -e`):
 ## 7. Diagram Alur Verifikasi Pasca-Deployment (Go-Live Gate)
 
 ![Gerbang Verifikasi Go-Live](./assets/diagrams/05_golive_gate_checklist.svg)
+
+---
+
+## 8. Otomatisasi Rilis & Publikasi ke Central Hub via GitHub Actions
+
+AksaraEdu dilengkapi alur kerja otomatisasi CI/CD pada `.github/workflows/release-app.yml` yang berjalan setiap kali ada tag rilis baru (misal `v1.0.0`) yang di-push ke repository GitHub.
+
+### Alur Kerja GitHub Actions:
+```
+[ Developer Push Tag: git push origin v1.0.0 ]
+                       │
+                       ▼
+[ GitHub Actions: Setup Bun, PHP 8.3, Composer ]
+                       │
+                       ▼
+[ Build Frontend (bun run build) & Optimize Vendor (--no-dev) ]
+                       │
+                       ▼
+[ Kemas .zip Bersih & Hitung SHA-256 Checksum ]
+                       │
+         ┌─────────────┴─────────────┐
+         ▼                           ▼
+[ Publish GitHub Release ]   [ Upload & Register ke @hub API ]
+(Lampirkan .zip & .sha256)   (POST /api/v1/updates/publish)
+```
+
+### Konfigurasi GitHub Repository Secrets:
+Untuk mengaktifkan pengiriman otomatis ke `@hub`, tambahkan rahasia berikut pada menu **Settings &rarr; Secrets and variables &rarr; Actions**:
+* **`HUB_API_URL`**: Domain portal Central Hub (contoh: `https://hub.aksaraedu.id`).
+* **`HUB_DEPLOY_SECRET`**: Nilai token yang sama dengan `DEPLOY_WEBHOOK_SECRET` pada berkas `.env` Central Hub.
+
