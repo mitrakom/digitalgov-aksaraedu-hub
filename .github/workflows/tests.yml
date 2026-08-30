@@ -1,3 +1,0 @@
-# Workflow ini telah digabungkan secara otomatis ke dalam:
-# .github/workflows/deploy.production.yml
-# (Job 'test' akan otomatis berjalan sebelum Job 'deploy')

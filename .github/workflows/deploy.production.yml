@@ -15,48 +15,10 @@ permissions:
 
 jobs:
   # ========================================================
-  # JOB 1: TEST & CI QUALITY CHECK
-  # ========================================================
-  test:
-    name: Run Quality & Test Suite
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup PHP 8.3
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          extensions: mbstring,ctype,fileinfo,gd,xml,curl,zip,openssl,pdo_mysql,pdo_pgsql,redis,bcmath
-          tools: composer:v2
-          coverage: none
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Setup Application Dependencies
-        run: |
-          composer install --prefer-dist --no-interaction
-          cp .env.example .env
-          php artisan key:generate
-          touch database/database.sqlite
-          bun install --frozen-lockfile || bun install
-
-      - name: Run CI Checks & Tests
-        run: composer ci:check
-
-  # ========================================================
-  # JOB 2: BUILD, PACKAGE & DEPLOY TO HOSTING
-  # (Hanya dijalankan jika Job 1 / Test Lolos 100%)
+  # UNIFIED JOB: CI TEST, BUILD, PACKAGE & DEPLOY TO HOSTING
   # ========================================================
   deploy:
-    name: Build, Package & Deploy Central Hub
-    needs: test
+    name: Test, Build & Deploy Central Hub
     runs-on: ubuntu-latest
     environment: production
     timeout-minutes: 15
@@ -75,23 +37,35 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      # Step 3: Setup Bun
+      # Step 3: Setup Bun (Fast JavaScript runtime & package manager)
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
-      # Step 4: Install Composer dependencies (Production optimized)
-      - name: Install Composer dependencies
+      # Step 4: Setup Environment & Dependencies (Composer + Bun)
+      - name: Setup Environment & Dependencies
+        run: |
+          composer install --prefer-dist --no-interaction
+          cp .env.example .env
+          php artisan key:generate
+          touch database/database.sqlite
+          bun install --frozen-lockfile || bun install
+
+      # Step 5: Run CI Checks & Tests (Quality Gate)
+      # Jika step ini gagal, workflow berhenti otomatis (Build & Deploy TIDAK AKAN berjalan)
+      - name: Run CI Checks & Tests
+        run: composer ci:check
+
+      # Step 6: Build frontend assets
+      - name: Build frontend assets
+        run: bun run build
+
+      # Step 7: Optimize Composer dependencies for Production (Remove dev dependencies)
+      - name: Optimize Composer dependencies for Production
         run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
-      # Step 5: Install Bun dependencies & Build frontend assets
-      - name: Install Bun dependencies & Build frontend assets
-        run: |
-          bun install --frozen-lockfile || bun install
-          bun run build
-
-      # Step 6: Generate dynamic application version (CalVer + Time WITA / Makassar)
+      # Step 8: Generate dynamic application version (CalVer + Time WITA / Makassar)
       - name: Generate dynamic application version (CalVer + Time WITA)
         run: |
           VERSION_TAG=$(TZ='Asia/Makassar' date +'v%Y.%m.%d.%H%M')
@@ -108,7 +82,7 @@ jobs:
             sed -i "s/'string' => .*/'string' => '${VERSION_TAG}',/" config/version.php
           fi
 
-      # Step 7: Package application into deploy.zip (AksaraEdu Central Hub Package)
+      # Step 9: Package application into deploy.zip (AksaraEdu Central Hub Package)
       - name: Create deploy.zip archive
         run: |
           echo "📦 Mengompres AksaraEdu Central Hub ke deploy.zip (Versi: ${{ env.APP_VERSION }})..."
@@ -157,7 +131,7 @@ jobs:
           ZIP_SIZE=$(du -sh deploy.zip | cut -f1)
           echo "✓ deploy.zip berhasil dibuat (Ukuran: $ZIP_SIZE)"
 
-      # Step 8: Upload deploy.zip via FTP (Only 1 file uploaded - Fast & 100% reliable)
+      # Step 10: Upload deploy.zip via FTP (Only 1 file uploaded - Fast & 100% reliable)
       - name: Upload deploy.zip to Production FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
@@ -177,7 +151,7 @@ jobs:
             !deploy.zip
             !public/deploy-webhook.php
 
-      # Step 9: Trigger Webhook (Auto-extract deploy.zip + migrate + cache optimizations)
+      # Step 11: Trigger Webhook (Auto-extract deploy.zip + migrate + cache optimizations)
       - name: Trigger Post-Deploy Webhook (Auto-Extract, Migrate & Cache)
         run: |
           echo "🔄 Mengirim sinyal webhook untuk auto-extract, database migration, dan cache update Central Hub..."
@@ -215,7 +189,7 @@ jobs:
           fi
         continue-on-error: true
 
-      # Step 10: Verify deployed assets
+      # Step 12: Verify deployed assets
       - name: Verify deployed assets
         run: |
           TARGET_MANIFEST_URL="${{ secrets.DEPLOY_MANIFEST_URL || 'https://aksaraedu.digitalgov.id/build/manifest.json' }}"
@@ -227,7 +201,7 @@ jobs:
           fi
         continue-on-error: true
 
-      # Step 11: Deployment summary
+      # Step 13: Deployment summary
       - name: Deployment summary
         if: always()
         run: |
