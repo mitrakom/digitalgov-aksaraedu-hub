@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\KlienSekolah;
 use App\Models\Lisensi;
+use App\Services\BundleCustomizerService;
 use App\Services\LicenseSignerService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class LisensiController extends Controller
@@ -199,7 +201,7 @@ class LisensiController extends Controller
         ]);
     }
 
-    public function downloadCustomBundle(string $id, \App\Services\BundleCustomizerService $bundleCustomizer): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    public function downloadCustomBundle(string $id, BundleCustomizerService $bundleCustomizer): BinaryFileResponse
     {
         $lisensi = Lisensi::with('klienSekolah')->findOrFail($id);
 
@@ -210,4 +212,3 @@ class LisensiController extends Controller
         return response()->download($zipPath, $filename)->deleteFileAfterSend(true);
     }
 }
-

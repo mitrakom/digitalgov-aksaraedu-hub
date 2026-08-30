@@ -7,7 +7,6 @@ namespace App\Services;
 use App\Models\Lisensi;
 use Exception;
 use Illuminate\Support\Facades\File;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use ZipArchive;
 
 class BundleCustomizerService
@@ -259,7 +258,7 @@ ENV;
         $zip->addFromString('.env.example', $envContent."\n");
 
         // 5. Inject root .htaccess for direct public_html extraction support
-        $rootHtaccess = <<<HTACCESS
+        $rootHtaccess = <<<'HTACCESS'
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule ^$ public/ [L]

@@ -298,4 +298,3 @@ Untuk mengaktifkan pengiriman otomatis ke `@hub`, tambahkan rahasia berikut pada
 2. **Environment Instans Demo**: Set `APP_ENV=demo`, `APP_URL=https://demo.lms.id`, `MAIL_MAILER=log`.
 3. **Eksekusi Seeder Demo**: Jalankan `php artisan db:seed --class=DemoSeeder --force` (atau centang opsi demo di web installer `/install`).
 4. **Auto-Reset Cron Job**: Pasang cron `0 */6 * * * php artisan migrate:fresh --force && php artisan db:seed --class=DemoSeeder --force` untuk menjaga kebersihan data demonstrasi.
-

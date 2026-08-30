@@ -29,7 +29,7 @@ use Illuminate\Support\Carbon;
  * @property array<string>|null $allowed_features
  * @property string|null $catatan_kontrak
  * @property float $nilai_kontrak
- * @property-read KlienSekolah $klienSekolah
+ * @property-read KlienSekolah|null $klienSekolah
  * @property-read Collection<int, TelemetriHeartbeat> $telemetriHeartbeats
  * @property-read Collection<int, RiwayatUpdate> $riwayatUpdates
  */
