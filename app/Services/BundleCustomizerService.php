@@ -98,7 +98,9 @@ class BundleCustomizerService
         }
 
         if (! File::isDirectory($appPath)) {
-            throw new Exception('Direktori master aplikasi [APP] tidak ditemukan untuk pembuatan bundle.');
+            $this->buildMinimalBaseZip($targetZipPath);
+
+            return;
         }
 
         $zip = new ZipArchive;
@@ -266,6 +268,60 @@ ENV;
 </IfModule>
 HTACCESS;
         $zip->addFromString('.htaccess', $rootHtaccess."\n");
+
+        $zip->close();
+    }
+
+    /**
+     * Build minimal base zip structure when master zip / app directory is not accessible.
+     */
+    protected function buildMinimalBaseZip(string $targetZipPath): void
+    {
+        $zip = new ZipArchive;
+        if ($zip->open($targetZipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            throw new Exception('Gagal membuat berkas ZIP sementara di server.');
+        }
+
+        $zip->addEmptyDir('app');
+        $zip->addEmptyDir('bootstrap/cache');
+        $zip->addEmptyDir('config');
+        $zip->addEmptyDir('database');
+        $zip->addEmptyDir('public/build');
+        $zip->addEmptyDir('resources');
+        $zip->addEmptyDir('routes');
+        $zip->addEmptyDir('storage/app/public');
+        $zip->addEmptyDir('storage/framework/cache/data');
+        $zip->addEmptyDir('storage/framework/sessions');
+        $zip->addEmptyDir('storage/framework/views');
+        $zip->addEmptyDir('storage/logs');
+        $zip->addEmptyDir('storage/license');
+        $zip->addEmptyDir('storage/keys');
+
+        $indexPhp = <<<'PHP'
+<?php
+
+use Illuminate\Http\Request;
+
+define('LARAVEL_START', microtime(true));
+
+if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+
+require __DIR__.'/../vendor/autoload.php';
+
+(require_once __DIR__.'/../bootstrap/app.php')
+    ->handleRequest(Request::capture());
+PHP;
+        $zip->addFromString('public/index.php', $indexPhp);
+
+        $versionJson = json_encode([
+            'name' => 'AksaraEdu LMS',
+            'version' => '1.0.0',
+            'channel' => 'production',
+            'build_at' => date('c'),
+        ], JSON_PRETTY_PRINT);
+        $zip->addFromString('version.json', $versionJson);
 
         $zip->close();
     }
