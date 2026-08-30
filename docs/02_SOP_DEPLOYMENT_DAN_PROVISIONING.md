@@ -289,3 +289,13 @@ Untuk mengaktifkan pengiriman otomatis ke `@hub`, tambahkan rahasia berikut pada
 
 - **`HUB_API_URL`**: Domain portal Central Hub (contoh: `https://hub.aksaraedu.id`).
 - **`HUB_DEPLOY_SECRET`**: Nilai token yang sama dengan `DEPLOY_WEBHOOK_SECRET` pada berkas `.env` Central Hub.
+
+---
+
+## 9. SOP Khusus Deployment Instans Demo Showcase (`demo.lms.id`)
+
+1. **Registrasi Klien**: Daftarkan klien di `@hub` (`NPSN: 99999999`, Nama: `SMK Negeri 1 Aksara Nusantara (Demo Showcase)`), terbitkan lisensi dengan domain `demo.lms.id`.
+2. **Environment Instans Demo**: Set `APP_ENV=demo`, `APP_URL=https://demo.lms.id`, `MAIL_MAILER=log`.
+3. **Eksekusi Seeder Demo**: Jalankan `php artisan db:seed --class=DemoSeeder --force` (atau centang opsi demo di web installer `/install`).
+4. **Auto-Reset Cron Job**: Pasang cron `0 */6 * * * php artisan migrate:fresh --force && php artisan db:seed --class=DemoSeeder --force` untuk menjaga kebersihan data demonstrasi.
+

@@ -77,3 +77,40 @@ Setiap laporan kendala dari operator sekolah yang masuk melalui helpdesk Central
 2. Sistem otomatis menyediakan akun sandbox demo instan berdurasi 2 jam.
 3. Tim Sales / Account Executive wajib menghubungi nomor WhatsApp pemohon dalam waktu **maksimal 1x24 jam** untuk menawarkan konsultasi kebutuhan (apakah cocok dengan model Beli Putus atau Berlangganan).
 4. Update status lead dari `Baru` -> `Dihubungi` -> `Presentasi` -> `Deal (Menjadi Klien)` atau `Lost`.
+
+---
+
+## 6. SOP Registrasi & Tata Cara Hosting Aplikasi Demo Showcase (`demo.lms.id`)
+
+Untuk menyediakan server demo publik yang siap diuji coba oleh calon klien dan mitra sekolah:
+
+### A. Registrasi Instans Demo di Central Hub:
+1. Buka menu **Manajemen Sekolah Mitra (`/admin/klien`)** -> **Tambah Klien**:
+   - **NPSN**: `99999999` *(NPSN khusus demo showcase)*
+   - **Nama Sekolah**: `SMK Negeri 1 Aksara Nusantara (Demo Showcase)`
+   - **Tipe Sekolah**: `SMK` (atau `SMA`)
+   - **Status Klien**: `aktif`
+2. Buka menu **Lisensi Klien (`/admin/lisensi`)** -> **Terbitkan Lisensi**:
+   - Pilih sekolah demo di atas, set domain `demo.lms.id`, model `Beli Putus` / `Berlangganan`.
+   - Unduh berkas `aksaraedu.lic`.
+
+### B. Tata Cara Hosting & Deployment Instans Demo (`[APP]`):
+1. **Konfigurasi Lingkungan (`.env`)**:
+   ```env
+   APP_ENV=demo
+   APP_URL=https://demo.lms.id
+   MAIL_MAILER=log
+   ```
+2. **Pemasangan & Seeding Showcase**:
+   - Pasang file `aksaraedu.lic` pada `storage/license/aksaraedu.lic`.
+   - Jalankan: `php artisan migrate:fresh --force && php artisan db:seed --class=DemoSeeder --force` *(atau pilih opsi "Pasang Data Contoh Demo" pada web installer `/install`)*.
+3. **Akun Akses Showcase** (Password: `demo12345`):
+   - Admin: `admin@demo.lms.id`
+   - Guru: `guru@demo.lms.id`
+   - Siswa: `siswa@demo.lms.id`
+4. **Otomasi Pembersihan Berkala (Cron Reset Self-Healing)**:
+   Pasang cron job di server hosting demo untuk me-reset data setiap 6 jam:
+   ```bash
+   0 */6 * * * cd /var/www/demo-lms && php artisan migrate:fresh --force && php artisan db:seed --class=DemoSeeder --force && php artisan optimize:clear
+   ```
+
