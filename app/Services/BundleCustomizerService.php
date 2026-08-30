@@ -119,7 +119,12 @@ class BundleCustomizerService
         $zip->addEmptyDir('bootstrap/cache');
 
         $excludedNames = [
-            'node_modules', '.git', '.github', '.agents', '.env', 'tests',
+            'node_modules', '.git', '.github', '.gitignore', '.gitattributes',
+            '.agents', 'AGENTS.md', 'docs', 'scripts', 'releases', '.env', 'tests',
+            'phpunit.xml', 'phpstan.neon', 'pint.json', 'eslint.config.js',
+            '.prettierrc', '.prettierignore', '.editorconfig', 'tsconfig.json',
+            'vite.config.ts', 'boost.json', 'package.json', 'package-lock.json',
+            'bun.lock', 'pnpm-workspace.yaml', '.npmrc', '.fleet', '.vscode', '.idea',
             'storage/installed', 'storage/logs', 'storage/framework/cache/data',
             'storage/framework/sessions', 'storage/framework/views',
         ];
