@@ -34,10 +34,10 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '22'
+          bun-version: latest
 
       - name: Setup Application Dependencies
         run: |
@@ -45,7 +45,7 @@ jobs:
           cp .env.example .env
           php artisan key:generate
           touch database/database.sqlite
-          npm ci --include=dev
+          bun install --frozen-lockfile || bun install
 
       - name: Run CI Checks & Tests
         run: composer ci:check
@@ -75,30 +75,21 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      # Step 3: Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      # Step 3: Setup Bun
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '22'
+          bun-version: latest
 
       # Step 4: Install Composer dependencies (Production optimized)
       - name: Install Composer dependencies
         run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
-      # Step 5: Install Node dependencies & Build frontend assets
-      - name: Install Node dependencies & Build frontend assets
+      # Step 5: Install Bun dependencies & Build frontend assets
+      - name: Install Bun dependencies & Build frontend assets
         run: |
-          if [ -f pnpm-lock.yaml ]; then
-            npm install -g pnpm
-            pnpm install --frozen-lockfile
-            pnpm run build
-          elif [ -f yarn.lock ]; then
-            yarn install --frozen-lockfile
-            yarn build
-          else
-            npm ci --include=dev
-            npm run build
-          fi
+          bun install --frozen-lockfile || bun install
+          bun run build
 
       # Step 6: Generate dynamic application version (CalVer + Time WITA / Makassar)
       - name: Generate dynamic application version (CalVer + Time WITA)
