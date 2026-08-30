@@ -48,6 +48,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::post('/lisensi/{id}/reset-hardware', [LisensiController::class, 'resetHardware'])->name('lisensi.reset-hardware');
     Route::post('/lisensi/{id}/revoke', [LisensiController::class, 'revoke'])->name('lisensi.revoke');
     Route::get('/lisensi/{id}/download', [LisensiController::class, 'downloadLicenseFile'])->name('lisensi.download');
+    Route::get('/lisensi/{id}/download-bundle', [LisensiController::class, 'downloadCustomBundle'])->name('lisensi.download-bundle');
 
     // Telemetri & Heartbeat Monitor
     Route::get('/telemetri', [TelemetriController::class, 'index'])->name('telemetri.index');

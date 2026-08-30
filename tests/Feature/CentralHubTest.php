@@ -136,4 +136,24 @@ class CentralHubTest extends TestCase
                 'status' => 'success',
             ]);
     }
+
+    public function test_admin_can_download_license_file(): void
+    {
+        $user = User::where('email', 'admin@aksaraedu.id')->first();
+        $lisensi = Lisensi::first();
+
+        $response = $this->actingAs($user)->get("/admin/lisensi/{$lisensi->id}/download");
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/octet-stream');
+    }
+
+    public function test_admin_can_download_custom_bundle(): void
+    {
+        $user = User::where('email', 'admin@aksaraedu.id')->first();
+        $lisensi = Lisensi::first();
+
+        $response = $this->actingAs($user)->get("/admin/lisensi/{$lisensi->id}/download-bundle");
+        $response->assertStatus(200);
+        $this->assertStringContainsString('zip', $response->headers->get('Content-Type') ?? '');
+    }
 }

@@ -198,4 +198,16 @@ class LisensiController extends Controller
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
         ]);
     }
+
+    public function downloadCustomBundle(string $id, \App\Services\BundleCustomizerService $bundleCustomizer): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $lisensi = Lisensi::with('klienSekolah')->findOrFail($id);
+
+        $zipPath = $bundleCustomizer->createCustomizedBundle($lisensi);
+        $cleanNpsn = preg_replace('/[^A-Za-z0-9_-]/', '', $lisensi->klienSekolah->npsn);
+        $filename = "aksaraedu-lms-{$cleanNpsn}-siap-pasang.zip";
+
+        return response()->download($zipPath, $filename)->deleteFileAfterSend(true);
+    }
 }
+

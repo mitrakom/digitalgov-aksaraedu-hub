@@ -12,6 +12,7 @@ import {
     Plus,
     Search,
     Download,
+    Package,
     RotateCcw,
     ShieldAlert,
     ShieldCheck,
@@ -318,8 +319,15 @@ const copyPublicKey = () => {
                                         class="flex items-center justify-end gap-1.5"
                                     >
                                         <a
+                                            :href="`/admin/lisensi/${lic.id}/download-bundle`"
+                                            title="Unduh Paket Bundle Siap Pasang Sekolah (.zip)"
+                                            class="rounded-lg border border-indigo-500/30 bg-indigo-600/20 p-1.5 text-indigo-300 transition-colors hover:bg-indigo-600 hover:text-white"
+                                        >
+                                            <Package class="h-3.5 w-3.5" />
+                                        </a>
+                                        <a
                                             :href="`/admin/lisensi/${lic.id}/download`"
-                                            title="Unduh file aksaraedu.lic"
+                                            title="Unduh file lisensi aksaraedu.lic"
                                             class="rounded-lg border border-emerald-500/30 bg-emerald-600/20 p-1.5 text-emerald-300 transition-colors hover:bg-emerald-600 hover:text-white"
                                         >
                                             <Download class="h-3.5 w-3.5" />
