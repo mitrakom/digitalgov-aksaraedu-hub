@@ -9,6 +9,7 @@ use App\Models\RiwayatUpdate;
 use App\Services\LicenseSignerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class UpdateApiController extends Controller
@@ -23,13 +24,6 @@ class UpdateApiController extends Controller
     public function check(Request $request): JsonResponse
     {
         $currentVersion = (string) $request->query('current_version', '1.0.0');
-        $npsn = (string) $request->query('npsn');
-        $token = (string) ($request->query('token') ?: $request->bearerToken());
-
-        $lisensi = null;
-        if (! empty($token)) {
-            $lisensi = Lisensi::with('klienSekolah')->where('token_api', $token)->first();
-        }
 
         $latestRelease = RilisPembaruan::where('is_public', true)
             ->latest('published_at')
@@ -38,19 +32,31 @@ class UpdateApiController extends Controller
         if (! $latestRelease) {
             return response()->json([
                 'update_available' => false,
-                'message' => 'Sistem Anda sudah dalam versi terbaru.',
+                'message' => 'Tidak ada paket rilis pembaruan yang tersedia.',
             ]);
         }
 
-        $updateAvailable = version_compare($latestRelease->nomor_versi, $currentVersion, '>');
+        $isNewer = version_compare(
+            ltrim($latestRelease->nomor_versi, 'v'),
+            ltrim($currentVersion, 'v'),
+            '>'
+        );
 
-        if (! $updateAvailable) {
+        if (! $isNewer) {
             return response()->json([
                 'update_available' => false,
                 'current_version' => $currentVersion,
                 'latest_version' => $latestRelease->nomor_versi,
-                'message' => 'Versi LMS saat ini sudah yang paling mutakhir.',
+                'message' => 'Instans LMS Anda sudah menggunakan versi terbaru.',
             ]);
+        }
+
+        $npsn = (string) $request->query('npsn');
+        $token = (string) ($request->query('token') ?: $request->bearerToken());
+
+        $lisensi = null;
+        if (! empty($token)) {
+            $lisensi = Lisensi::with('klienSekolah')->where('token_api', $token)->first();
         }
 
         $isCoveredByWarranty = false;
@@ -67,14 +73,18 @@ class UpdateApiController extends Controller
         return response()->json([
             'update_available' => true,
             'version' => $latestRelease->nomor_versi,
+            'current_version' => $currentVersion,
+            'latest_version' => $latestRelease->nomor_versi,
+            'tipe_rilis' => $latestRelease->tipe_rilis,
             'release_type' => $latestRelease->tipe_rilis,
-            'is_critical_patch' => $latestRelease->is_critical_patch,
+            'is_critical_patch' => (bool) $latestRelease->is_critical_patch,
             'is_covered_by_warranty' => $isCoveredByWarranty,
             'changelog' => $latestRelease->ringkasan_perubahan,
-            'download_url' => url("/api/v1/updates/download/{$latestRelease->nomor_versi}?token={$token}"),
+            'ringkasan_perubahan' => $latestRelease->ringkasan_perubahan,
             'checksum_sha256' => $latestRelease->checksum_sha256,
             'file_signature' => $latestRelease->file_signature,
             'published_at' => $latestRelease->published_at?->toIso8601String(),
+            'download_url' => url("/api/v1/updates/download/{$latestRelease->nomor_versi}?token={$token}"),
         ]);
     }
 
@@ -106,8 +116,19 @@ class UpdateApiController extends Controller
             'downloaded_at' => now(),
         ]);
 
-        if ($release->file_path_zip && file_exists(storage_path('app/'.$release->file_path_zip))) {
-            return response()->download(storage_path('app/'.$release->file_path_zip));
+        if ($release->file_path_zip) {
+            $possiblePaths = [
+                Storage::disk('local')->path($release->file_path_zip),
+                storage_path('app/private/'.$release->file_path_zip),
+                storage_path('app/'.$release->file_path_zip),
+                storage_path('app/public/'.$release->file_path_zip),
+            ];
+
+            foreach ($possiblePaths as $fullPath) {
+                if (file_exists($fullPath) && is_file($fullPath)) {
+                    return response()->download($fullPath, "aksaraedu-lms-{$release->nomor_versi}-release.zip");
+                }
+            }
         }
 
         return response()->json([
@@ -148,7 +169,8 @@ class UpdateApiController extends Controller
         if ($request->hasFile('file')) {
             $filePath = $request->file('file')->storeAs('releases', 'aksaraedu-lms-'.$validated['nomor_versi'].'.zip');
             if (empty($validated['checksum_sha256'])) {
-                $validated['checksum_sha256'] = hash_file('sha256', storage_path('app/'.$filePath));
+                $targetFile = Storage::disk('local')->path($filePath);
+                $validated['checksum_sha256'] = file_exists($targetFile) ? hash_file('sha256', $targetFile) : null;
             }
         }
 

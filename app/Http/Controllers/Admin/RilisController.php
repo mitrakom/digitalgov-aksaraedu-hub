@@ -8,6 +8,7 @@ use App\Models\RiwayatUpdate;
 use App\Services\LicenseSignerService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -39,8 +40,19 @@ class RilisController extends Controller
     {
         $release = RilisPembaruan::findOrFail($id);
 
-        if ($release->file_path_zip && file_exists(storage_path('app/'.$release->file_path_zip))) {
-            return response()->download(storage_path('app/'.$release->file_path_zip));
+        if ($release->file_path_zip) {
+            $possiblePaths = [
+                Storage::disk('local')->path($release->file_path_zip),
+                storage_path('app/private/'.$release->file_path_zip),
+                storage_path('app/'.$release->file_path_zip),
+                storage_path('app/public/'.$release->file_path_zip),
+            ];
+
+            foreach ($possiblePaths as $fullPath) {
+                if (file_exists($fullPath) && is_file($fullPath)) {
+                    return response()->download($fullPath, "aksaraedu-lms-{$release->nomor_versi}-release.zip");
+                }
+            }
         }
 
         return back()->with('error', 'Berkas .zip fisik belum diunggah atau tidak ditemukan di storage server.');
