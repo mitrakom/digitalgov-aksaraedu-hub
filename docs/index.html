@@ -1,180 +1,379 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AksaraEdu Central Hub - Portal Dokumentasi & SOP</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-  </style>
-</head>
-<body class="bg-slate-50 text-slate-800 antialiased">
-  
-  <!-- Top Navigation -->
-  <header class="bg-slate-900 text-white sticky top-0 z-50 border-b border-slate-800 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <span class="text-2xl">🏢</span>
-        <div>
-          <h1 class="text-lg font-bold tracking-tight">AksaraEdu Central Hub</h1>
-          <p class="text-xs text-slate-400">Portal Resmi Dokumentasi, SOP Deployment & Serah Terima</p>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AksaraEdu Central Hub - Portal Dokumentasi & SOP</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            body {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+        </style>
+    </head>
+    <body class="bg-slate-50 text-slate-800 antialiased">
+        <!-- Top Navigation -->
+        <header
+            class="sticky top-0 z-50 border-b border-slate-800 bg-slate-900 text-white shadow-md"
+        >
+            <div
+                class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
+            >
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">🏢</span>
+                    <div>
+                        <h1 class="text-lg font-bold tracking-tight">
+                            AksaraEdu Central Hub
+                        </h1>
+                        <p class="text-xs text-slate-400">
+                            Portal Resmi Dokumentasi, SOP Deployment & Serah
+                            Terima
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 text-xs">
+                    <span
+                        class="rounded-full border border-emerald-500/30 bg-emerald-500/20 px-3 py-1 font-semibold text-emerald-300"
+                    >
+                        ● Versi Rilis 1.0.0
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
+                <!-- Sidebar Navigation -->
+                <aside class="lg:col-span-1">
+                    <nav
+                        class="sticky top-24 space-y-2 rounded-2xl border border-slate-200 bg-white p-5 text-sm font-medium shadow-sm"
+                    >
+                        <p
+                            class="mb-3 text-xs font-bold tracking-wider text-slate-400 uppercase"
+                        >
+                            Daftar Dokumen SOP
+                        </p>
+                        <a
+                            href="#ekosistem"
+                            class="block rounded-lg px-3 py-2 text-slate-700 transition hover:bg-slate-100"
+                            >🏛️ 1. Ekosistem & Arsitektur</a
+                        >
+                        <a
+                            href="#kriptografi"
+                            class="block rounded-lg px-3 py-2 text-slate-700 transition hover:bg-slate-100"
+                            >🔐 2. Kriptografi RSA-4096</a
+                        >
+                        <a
+                            href="#sop-beli-putus"
+                            class="block rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 font-semibold text-amber-900 transition"
+                            >💼 3. SOP Beli Putus (On-Premise)</a
+                        >
+                        <a
+                            href="#sop-saas"
+                            class="block rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 font-semibold text-sky-900 transition"
+                            >☁️ 4. SOP SaaS (Langganan)</a
+                        >
+                        <a
+                            href="#golive-gate"
+                            class="block rounded-lg px-3 py-2 text-slate-700 transition hover:bg-slate-100"
+                            >🚦 5. Gerbang Go-Live Gate</a
+                        >
+                        <a
+                            href="#serah-terima"
+                            class="block rounded-lg px-3 py-2 text-slate-700 transition hover:bg-slate-100"
+                            >📝 6. Serah Terima & BAST</a
+                        >
+                        <a
+                            href="#vendor-sla"
+                            class="block rounded-lg px-3 py-2 text-slate-700 transition hover:bg-slate-100"
+                            >🎫 7. Operasional & Matriks SLA</a
+                        >
+                        <a
+                            href="#api-gateway"
+                            class="block rounded-lg px-3 py-2 text-slate-700 transition hover:bg-slate-100"
+                            >🚪 8. REST API Gateway</a
+                        >
+                    </nav>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="space-y-10 lg:col-span-3">
+                    <!-- SECTION 1: Ekosistem -->
+                    <section
+                        id="ekosistem"
+                        class="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+                    >
+                        <div class="flex items-center space-x-3">
+                            <span
+                                class="rounded-lg bg-blue-100 p-2 text-lg text-blue-700"
+                                >🏛️</span
+                            >
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">
+                                    1. Topologi Ekosistem & Arsitektur
+                                </h2>
+                                <p class="text-sm text-slate-500">
+                                    Hubungan Central Hub dengan Instans Beli
+                                    Putus dan SaaS
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-2 shadow-inner"
+                        >
+                            <img
+                                src="./assets/diagrams/01_ekosistem_dan_arsitektur.svg"
+                                alt="Topologi Ekosistem"
+                                class="h-auto w-full"
+                            />
+                        </div>
+                    </section>
+
+                    <!-- SECTION 2: Kriptografi RSA -->
+                    <section
+                        id="kriptografi"
+                        class="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+                    >
+                        <div class="flex items-center space-x-3">
+                            <span
+                                class="rounded-lg bg-purple-100 p-2 text-lg text-purple-700"
+                                >🔐</span
+                            >
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">
+                                    2. Protokol Kriptografi Asimetris RSA-4096
+                                </h2>
+                                <p class="text-sm text-slate-500">
+                                    Penandatanganan Kunci Privat di Hub &
+                                    Verifikasi Offline Kunci Publik di Sekolah
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-2 shadow-inner"
+                        >
+                            <img
+                                src="./assets/diagrams/02_kriptografi_rsa4096.svg"
+                                alt="Kriptografi RSA"
+                                class="h-auto w-full"
+                            />
+                        </div>
+                    </section>
+
+                    <!-- SECTION 3: SOP Beli Putus -->
+                    <section
+                        id="sop-beli-putus"
+                        class="space-y-4 rounded-2xl border border-amber-200 bg-white p-6 shadow-sm sm:p-8"
+                    >
+                        <div class="flex items-center space-x-3">
+                            <span
+                                class="rounded-lg bg-amber-100 p-2 text-lg text-amber-800"
+                                >💼</span
+                            >
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">
+                                    3. SOP Deployment Beli Putus (On-Premise)
+                                </h2>
+                                <p class="text-sm text-slate-500">
+                                    Diagram alur 4 tahap instalasi server
+                                    sekolah, injeksi lisensi RSA & UAT
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-2 shadow-inner"
+                        >
+                            <img
+                                src="./assets/diagrams/03_deployment_beli_putus.svg"
+                                alt="SOP Deployment Beli Putus"
+                                class="h-auto w-full"
+                            />
+                        </div>
+                    </section>
+
+                    <!-- SECTION 4: SOP SaaS Cloud -->
+                    <section
+                        id="sop-saas"
+                        class="space-y-4 rounded-2xl border border-sky-200 bg-white p-6 shadow-sm sm:p-8"
+                    >
+                        <div class="flex items-center space-x-3">
+                            <span
+                                class="rounded-lg bg-sky-100 p-2 text-lg text-sky-800"
+                                >☁️</span
+                            >
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">
+                                    4. SOP Provisi SaaS & Telemetri 24 Jam
+                                </h2>
+                                <p class="text-sm text-slate-500">
+                                    Otomasi subdomain, token API, dan
+                                    sinkronisasi heartbeat harian
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-2 shadow-inner"
+                        >
+                            <img
+                                src="./assets/diagrams/04_deployment_saas_cloud.svg"
+                                alt="SOP SaaS Cloud"
+                                class="h-auto w-full"
+                            />
+                        </div>
+                    </section>
+
+                    <!-- SECTION 5: Go-Live Gate -->
+                    <section
+                        id="golive-gate"
+                        class="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+                    >
+                        <div class="flex items-center space-x-3">
+                            <span
+                                class="rounded-lg bg-emerald-100 p-2 text-lg text-emerald-800"
+                                >🚦</span
+                            >
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">
+                                    5. Gerbang Verifikasi Go-Live (Go-Live Gate)
+                                </h2>
+                                <p class="text-sm text-slate-500">
+                                    5 titik uji kritis sebelum sistem resmi
+                                    beroperasi
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-2 shadow-inner"
+                        >
+                            <img
+                                src="./assets/diagrams/05_golive_gate_checklist.svg"
+                                alt="Go-Live Gate Checklist"
+                                class="h-auto w-full"
+                            />
+                        </div>
+                    </section>
+
+                    <!-- SECTION 6: Serah Terima & BAST -->
+                    <section
+                        id="serah-terima"
+                        class="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+                    >
+                        <div class="flex items-center space-x-3">
+                            <span
+                                class="rounded-lg bg-indigo-100 p-2 text-lg text-indigo-800"
+                                >📝</span
+                            >
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">
+                                    6. SOP Serah Terima (BAST) & Garansi
+                                </h2>
+                                <p class="text-sm text-slate-500">
+                                    Alur handover Beli Putus vs SaaS dan hitung
+                                    mundur garansi bugfix 3 bulan
+                                </p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-2 shadow-inner"
+                        >
+                            <img
+                                src="./assets/diagrams/06_master_serah_terima.svg"
+                                alt="Master Serah Terima"
+                                class="mb-4 h-auto w-full"
+                            />
+                            <img
+                                src="./assets/diagrams/07_handover_beli_putus_garansi.svg"
+                                alt="Handover Beli Putus & Garansi"
+                                class="mb-4 h-auto w-full"
+                            />
+                            <img
+                                src="./assets/diagrams/08_lifecycle_billing_saas.svg"
+                                alt="Siklus Tagihan SaaS"
+                                class="h-auto w-full"
+                            />
+                        </div>
+                    </section>
+
+                    <!-- SECTION 7: Operasional & Matriks SLA -->
+                    <section
+                        id="vendor-sla"
+                        class="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+                    >
+                        <div class="flex items-center space-x-3">
+                            <span
+                                class="rounded-lg bg-rose-100 p-2 text-lg text-rose-800"
+                                >🎫</span
+                            >
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">
+                                    7. Manajemen Operasional Vendor & SLA
+                                    Helpdesk
+                                </h2>
+                                <p class="text-sm text-slate-500">
+                                    Logika kuota reset hardware (maks 3x) dan
+                                    matriks prioritas tiket
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-2 shadow-inner"
+                        >
+                            <img
+                                src="./assets/diagrams/09_vendor_operations_sla.svg"
+                                alt="Operasional Vendor & SLA"
+                                class="h-auto w-full"
+                            />
+                        </div>
+                    </section>
+
+                    <!-- SECTION 8: API Gateway -->
+                    <section
+                        id="api-gateway"
+                        class="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+                    >
+                        <div class="flex items-center space-x-3">
+                            <span
+                                class="rounded-lg bg-teal-100 p-2 text-lg text-teal-800"
+                                >🚪</span
+                            >
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">
+                                    8. Diagram REST API Gateway
+                                </h2>
+                                <p class="text-sm text-slate-500">
+                                    Protokol komunikasi aktivasi lisensi,
+                                    heartbeat harian, dan download update
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="overflow-hidden rounded-xl border border-slate-100 bg-slate-50 p-2 shadow-inner"
+                        >
+                            <img
+                                src="./assets/diagrams/10_api_gateway_sequence.svg"
+                                alt="API Gateway Sequence"
+                                class="h-auto w-full"
+                            />
+                        </div>
+                    </section>
+                </main>
+            </div>
         </div>
-      </div>
-      <div class="flex items-center space-x-2 text-xs">
-        <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full font-semibold">
-          ● Versi Rilis 1.0.0
-        </span>
-      </div>
-    </div>
-  </header>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-      
-      <!-- Sidebar Navigation -->
-      <aside class="lg:col-span-1">
-        <nav class="sticky top-24 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 text-sm font-medium">
-          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Daftar Dokumen SOP</p>
-          <a href="#ekosistem" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 transition">🏛️ 1. Ekosistem & Arsitektur</a>
-          <a href="#kriptografi" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 transition">🔐 2. Kriptografi RSA-4096</a>
-          <a href="#sop-beli-putus" class="block px-3 py-2 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 font-semibold transition">💼 3. SOP Beli Putus (On-Premise)</a>
-          <a href="#sop-saas" class="block px-3 py-2 rounded-lg bg-sky-50 text-sky-900 border border-sky-200 font-semibold transition">☁️ 4. SOP SaaS (Langganan)</a>
-          <a href="#golive-gate" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 transition">🚦 5. Gerbang Go-Live Gate</a>
-          <a href="#serah-terima" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 transition">📝 6. Serah Terima & BAST</a>
-          <a href="#vendor-sla" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 transition">🎫 7. Operasional & Matriks SLA</a>
-          <a href="#api-gateway" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 transition">🚪 8. REST API Gateway</a>
-        </nav>
-      </aside>
-
-      <!-- Main Content -->
-      <main class="lg:col-span-3 space-y-10">
-        
-        <!-- SECTION 1: Ekosistem -->
-        <section id="ekosistem" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-          <div class="flex items-center space-x-3">
-            <span class="p-2 bg-blue-100 text-blue-700 rounded-lg text-lg">🏛️</span>
-            <div>
-              <h2 class="text-xl font-bold text-slate-900">1. Topologi Ekosistem & Arsitektur</h2>
-              <p class="text-sm text-slate-500">Hubungan Central Hub dengan Instans Beli Putus dan SaaS</p>
-            </div>
-          </div>
-          <div class="rounded-xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50 p-2">
-            <img src="./assets/diagrams/01_ekosistem_dan_arsitektur.svg" alt="Topologi Ekosistem" class="w-full h-auto">
-          </div>
-        </section>
-
-        <!-- SECTION 2: Kriptografi RSA -->
-        <section id="kriptografi" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-          <div class="flex items-center space-x-3">
-            <span class="p-2 bg-purple-100 text-purple-700 rounded-lg text-lg">🔐</span>
-            <div>
-              <h2 class="text-xl font-bold text-slate-900">2. Protokol Kriptografi Asimetris RSA-4096</h2>
-              <p class="text-sm text-slate-500">Penandatanganan Kunci Privat di Hub & Verifikasi Offline Kunci Publik di Sekolah</p>
-            </div>
-          </div>
-          <div class="rounded-xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50 p-2">
-            <img src="./assets/diagrams/02_kriptografi_rsa4096.svg" alt="Kriptografi RSA" class="w-full h-auto">
-          </div>
-        </section>
-
-        <!-- SECTION 3: SOP Beli Putus -->
-        <section id="sop-beli-putus" class="bg-white p-6 sm:p-8 rounded-2xl border border-amber-200 shadow-sm space-y-4">
-          <div class="flex items-center space-x-3">
-            <span class="p-2 bg-amber-100 text-amber-800 rounded-lg text-lg">💼</span>
-            <div>
-              <h2 class="text-xl font-bold text-slate-900">3. SOP Deployment Beli Putus (On-Premise)</h2>
-              <p class="text-sm text-slate-500">Diagram alur 4 tahap instalasi server sekolah, injeksi lisensi RSA & UAT</p>
-            </div>
-          </div>
-          <div class="rounded-xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50 p-2">
-            <img src="./assets/diagrams/03_deployment_beli_putus.svg" alt="SOP Deployment Beli Putus" class="w-full h-auto">
-          </div>
-        </section>
-
-        <!-- SECTION 4: SOP SaaS Cloud -->
-        <section id="sop-saas" class="bg-white p-6 sm:p-8 rounded-2xl border border-sky-200 shadow-sm space-y-4">
-          <div class="flex items-center space-x-3">
-            <span class="p-2 bg-sky-100 text-sky-800 rounded-lg text-lg">☁️</span>
-            <div>
-              <h2 class="text-xl font-bold text-slate-900">4. SOP Provisi SaaS & Telemetri 24 Jam</h2>
-              <p class="text-sm text-slate-500">Otomasi subdomain, token API, dan sinkronisasi heartbeat harian</p>
-            </div>
-          </div>
-          <div class="rounded-xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50 p-2">
-            <img src="./assets/diagrams/04_deployment_saas_cloud.svg" alt="SOP SaaS Cloud" class="w-full h-auto">
-          </div>
-        </section>
-
-        <!-- SECTION 5: Go-Live Gate -->
-        <section id="golive-gate" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-          <div class="flex items-center space-x-3">
-            <span class="p-2 bg-emerald-100 text-emerald-800 rounded-lg text-lg">🚦</span>
-            <div>
-              <h2 class="text-xl font-bold text-slate-900">5. Gerbang Verifikasi Go-Live (Go-Live Gate)</h2>
-              <p class="text-sm text-slate-500">5 titik uji kritis sebelum sistem resmi beroperasi</p>
-            </div>
-          </div>
-          <div class="rounded-xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50 p-2">
-            <img src="./assets/diagrams/05_golive_gate_checklist.svg" alt="Go-Live Gate Checklist" class="w-full h-auto">
-          </div>
-        </section>
-
-        <!-- SECTION 6: Serah Terima & BAST -->
-        <section id="serah-terima" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-          <div class="flex items-center space-x-3">
-            <span class="p-2 bg-indigo-100 text-indigo-800 rounded-lg text-lg">📝</span>
-            <div>
-              <h2 class="text-xl font-bold text-slate-900">6. SOP Serah Terima (BAST) & Garansi</h2>
-              <p class="text-sm text-slate-500">Alur handover Beli Putus vs SaaS dan hitung mundur garansi bugfix 3 bulan</p>
-            </div>
-          </div>
-          
-          <div class="rounded-xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50 p-2">
-            <img src="./assets/diagrams/06_master_serah_terima.svg" alt="Master Serah Terima" class="w-full h-auto mb-4">
-            <img src="./assets/diagrams/07_handover_beli_putus_garansi.svg" alt="Handover Beli Putus & Garansi" class="w-full h-auto mb-4">
-            <img src="./assets/diagrams/08_lifecycle_billing_saas.svg" alt="Siklus Tagihan SaaS" class="w-full h-auto">
-          </div>
-        </section>
-
-        <!-- SECTION 7: Operasional & Matriks SLA -->
-        <section id="vendor-sla" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-          <div class="flex items-center space-x-3">
-            <span class="p-2 bg-rose-100 text-rose-800 rounded-lg text-lg">🎫</span>
-            <div>
-              <h2 class="text-xl font-bold text-slate-900">7. Manajemen Operasional Vendor & SLA Helpdesk</h2>
-              <p class="text-sm text-slate-500">Logika kuota reset hardware (maks 3x) dan matriks prioritas tiket</p>
-            </div>
-          </div>
-          <div class="rounded-xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50 p-2">
-            <img src="./assets/diagrams/09_vendor_operations_sla.svg" alt="Operasional Vendor & SLA" class="w-full h-auto">
-          </div>
-        </section>
-
-        <!-- SECTION 8: API Gateway -->
-        <section id="api-gateway" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-          <div class="flex items-center space-x-3">
-            <span class="p-2 bg-teal-100 text-teal-800 rounded-lg text-lg">🚪</span>
-            <div>
-              <h2 class="text-xl font-bold text-slate-900">8. Diagram REST API Gateway</h2>
-              <p class="text-sm text-slate-500">Protokol komunikasi aktivasi lisensi, heartbeat harian, dan download update</p>
-            </div>
-          </div>
-          <div class="rounded-xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50 p-2">
-            <img src="./assets/diagrams/10_api_gateway_sequence.svg" alt="API Gateway Sequence" class="w-full h-auto">
-          </div>
-        </section>
-
-      </main>
-    </div>
-  </div>
-
-  <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 mt-12 text-center text-xs">
-    <p>© 2026 AksaraEdu Central Hub - PT Mitranet Solusi Edukasi. Seluruh hak cipta dilindungi undang-undang.</p>
-  </footer>
-
-</body>
+        <footer
+            class="mt-12 border-t border-slate-800 bg-slate-900 py-8 text-center text-xs text-slate-400"
+        >
+            <p>
+                © 2026 AksaraEdu Central Hub - PT Mitranet Solusi Edukasi.
+                Seluruh hak cipta dilindungi undang-undang.
+            </p>
+        </footer>
+    </body>
 </html>

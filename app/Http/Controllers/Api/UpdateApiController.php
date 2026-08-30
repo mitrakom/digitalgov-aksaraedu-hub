@@ -190,4 +190,3 @@ class UpdateApiController extends Controller
         ], 201);
     }
 }
-

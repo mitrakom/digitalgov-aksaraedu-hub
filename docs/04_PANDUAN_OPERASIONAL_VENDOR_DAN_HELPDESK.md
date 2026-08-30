@@ -12,42 +12,47 @@ Akses dashboard vendor melalui: `https://hub.aksaraedu.id/admin` (wajib login au
 
 ---
 
-## 2. Prosedur Manajemen Lisensi (*Licensing Workflow*)
+## 2. Prosedur Manajemen Lisensi (_Licensing Workflow_)
 
-### 2.1. Menerbitkan Lisensi Baru (*Issue License*)
+### 2.1. Menerbitkan Lisensi Baru (_Issue License_)
+
 1. Buka menu **Master Lisensi** -> Klik tombol **"Terbitkan Lisensi Baru"**.
 2. Pilih Klien Sekolah terdaftar (atau buat entri sekolah baru jika belum ada).
 3. Isi parameter kontrak:
-   * **Model Lisensi**: Pilih `Beli Putus (On-Premise)` atau `Langganan (SaaS)`.
-   * **Tier Paket**: `Lite`, `Standar`, atau `Enterprise`.
-   * **Domain Terdaftar**: Domain FQDN atau IP server sekolah (misal `lms.smkn1sby.sch.id`).
-   * **Tanggal Rilis & Kadaluarsa**: Untuk *Beli Putus*, tanggal kadaluarsa otomatis `null` (seumur hidup) dan masa garansi bugfix diisi 3 bulan. Untuk *Langganan*, tanggal kadaluarsa diisi 1 tahun sejak aktivasi.
-   * **Nilai Kontrak**: Catat nominal kesepakatan untuk laporan keuangan.
+    - **Model Lisensi**: Pilih `Beli Putus (On-Premise)` atau `Langganan (SaaS)`.
+    - **Tier Paket**: `Lite`, `Standar`, atau `Enterprise`.
+    - **Domain Terdaftar**: Domain FQDN atau IP server sekolah (misal `lms.smkn1sby.sch.id`).
+    - **Tanggal Rilis & Kadaluarsa**: Untuk _Beli Putus_, tanggal kadaluarsa otomatis `null` (seumur hidup) dan masa garansi bugfix diisi 3 bulan. Untuk _Langganan_, tanggal kadaluarsa diisi 1 tahun sejak aktivasi.
+    - **Nilai Kontrak**: Catat nominal kesepakatan untuk laporan keuangan.
 4. Klik **"Terbitkan & Tanda Tangani (RSA-4096)"**.
 5. Sistem secara otomatis men-generate serial key, nomor lisensi, token API, dan signed license payload.
 6. Klik tombol **"Unduh .LIC"** untuk menyerahkan berkas kepada sekolah.
 
 ### 2.2. Prosedur Reset Hardware Fingerprint
-Jika server sekolah mengalami kerusakan perangkat keras (ganti motherboard/CPU/NIC) sehingga *Hardware UUID* berubah:
+
+Jika server sekolah mengalami kerusakan perangkat keras (ganti motherboard/CPU/NIC) sehingga _Hardware UUID_ berubah:
+
 1. Buka detail lisensi sekolah terkait di menu **Master Lisensi**.
 2. Klik tombol **"Reset Hardware Fingerprint"**.
 3. Sistem akan mengosongkan nilai fingerprint lama dan menambah counter `hardware_reset_count`.
 4. Saat server sekolah dijalankan kembali, sistem LMS akan mengikat hardware baru secara otomatis.
+
 > [!WARNING]
 > Batas toleransi reset hardware mandiri adalah maksimal **3 kali per tahun**. Melebihi kuota tersebut memerlukan verifikasi surat pernyataan resmi dari Kepala Sekolah.
 
 ---
 
-## 3. Repositori Rilis & Distribusi Patch (*Release Management*)
+## 3. Repositori Rilis & Distribusi Patch (_Release Management_)
 
 ### 3.1. Langkah Mengunggah Rilis Baru
+
 1. Buka menu **Repositori Rilis** -> Klik **"Unggah Rilis Baru"**.
 2. Masukkan metadata rilis:
-   * **Nomor Versi**: Menggunakan *Semantic Versioning* (contoh: `1.0.1`, `1.1.0`, `2.0.0`).
-   * **Tipe Rilis**: `Patch Bugfix`, `Minor Feature`, atau `Major Curriculum`.
-   * **Ringkasan Perubahan (Changelog)**: Tuliskan rincian perbaikan poin per poin.
-   * **Minimal Versi LMS**: Versi dasar minimum yang diperlukan sebelum apply patch ini.
-   * **File Arsip (ZIP/TAR.GZ)**: Unggah berkas pembaruan terkompresi.
+    - **Nomor Versi**: Menggunakan _Semantic Versioning_ (contoh: `1.0.1`, `1.1.0`, `2.0.0`).
+    - **Tipe Rilis**: `Patch Bugfix`, `Minor Feature`, atau `Major Curriculum`.
+    - **Ringkasan Perubahan (Changelog)**: Tuliskan rincian perbaikan poin per poin.
+    - **Minimal Versi LMS**: Versi dasar minimum yang diperlukan sebelum apply patch ini.
+    - **File Arsip (ZIP/TAR.GZ)**: Unggah berkas pembaruan terkompresi.
 3. Central Hub secara otomatis menghitung checksum SHA-256 berkas.
 4. Klik **"Publikasikan Rilis"**.
 
@@ -57,12 +62,12 @@ Jika server sekolah mengalami kerusakan perangkat keras (ganti motherboard/CPU/N
 
 Setiap laporan kendala dari operator sekolah yang masuk melalui helpdesk Central Hub diklasifikasikan berdasarkan Service Level Agreement (SLA):
 
-| Tingkat Prioritas | Kriteria Kendala | Target Waktu Respon Awal | Target Penyelesaian (Resolution Time) |
-| :--- | :--- | :--- | :--- |
-| **Kritis (Critical)** | Ujian CBT sedang berlangsung dan sistem lumpuh total (*outage*). | **< 15 Menit** | **< 2 Jam** |
-| **Tinggi (High)** | Fitur vital bermasalah (contoh: kalkulasi nilai rapor salah) mendekati batas waktu pembagian rapor. | **< 1 Jam** | **< 8 Jam** |
-| **Sedang (Medium)** | Kendala minor pada modul materi, tampilan UI, atau pertanyaan konfigurasi reguler. | **< 4 Jam** | **< 24 Jam** |
-| **Rendah (Low)** | Saran peningkatan fitur, permintaan tema khusus, atau konsultasi umum. | **< 12 Jam** | **< 3 Hari Kerja** |
+| Tingkat Prioritas     | Kriteria Kendala                                                                                    | Target Waktu Respon Awal | Target Penyelesaian (Resolution Time) |
+| :-------------------- | :-------------------------------------------------------------------------------------------------- | :----------------------- | :------------------------------------ |
+| **Kritis (Critical)** | Ujian CBT sedang berlangsung dan sistem lumpuh total (_outage_).                                    | **< 15 Menit**           | **< 2 Jam**                           |
+| **Tinggi (High)**     | Fitur vital bermasalah (contoh: kalkulasi nilai rapor salah) mendekati batas waktu pembagian rapor. | **< 1 Jam**              | **< 8 Jam**                           |
+| **Sedang (Medium)**   | Kendala minor pada modul materi, tampilan UI, atau pertanyaan konfigurasi reguler.                  | **< 4 Jam**              | **< 24 Jam**                          |
+| **Rendah (Low)**      | Saran peningkatan fitur, permintaan tema khusus, atau konsultasi umum.                              | **< 12 Jam**             | **< 3 Hari Kerja**                    |
 
 ---
 

@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\RilisPembaruan;
+use App\Models\RiwayatUpdate;
 use App\Services\LicenseSignerService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class RilisController extends Controller
 {
@@ -22,7 +24,7 @@ class RilisController extends Controller
             ->latest('published_at')
             ->paginate(10);
 
-        $recentDownloads = \App\Models\RiwayatUpdate::with(['rilisPembaruan', 'lisensi.klienSekolah'])
+        $recentDownloads = RiwayatUpdate::with(['rilisPembaruan', 'lisensi.klienSekolah'])
             ->latest('downloaded_at')
             ->take(15)
             ->get();
@@ -33,7 +35,7 @@ class RilisController extends Controller
         ]);
     }
 
-    public function download(string $id): \Symfony\Component\HttpFoundation\BinaryFileResponse|RedirectResponse
+    public function download(string $id): BinaryFileResponse|RedirectResponse
     {
         $release = RilisPembaruan::findOrFail($id);
 
