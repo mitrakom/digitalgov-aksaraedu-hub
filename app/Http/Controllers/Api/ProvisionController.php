@@ -29,7 +29,7 @@ class ProvisionController extends Controller
 
         try {
             $zipPath = $bundleCustomizer->createCustomizedBundle($lisensi);
-            $cleanNpsn = preg_replace('/[^A-Za-z0-9_-]/', '', $lisensi->klienSekolah?->npsn ?? 'client');
+            $cleanNpsn = preg_replace('/[^A-Za-z0-9_-]/', '', $lisensi->klienSekolah->npsn ?? 'client');
             $filename = "aksaraedu-lms-{$cleanNpsn}-bundle.zip";
 
             return response()->download($zipPath, $filename, [

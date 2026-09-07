@@ -100,7 +100,7 @@ class CentralHubTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'update_available' => true,
-                'version' => '1.0.1',
+                'version' => '1.0.6',
             ]);
     }
 

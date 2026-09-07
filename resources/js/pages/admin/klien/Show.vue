@@ -108,7 +108,11 @@ const submitRenew = () => {
 };
 
 const resetHardware = (licId: string) => {
-    if (confirm('Reset kaitan hardware fingerprint? Server sekolah dapat melakukan binding ulang pada mesin baru.')) {
+    if (
+        confirm(
+            'Reset kaitan hardware fingerprint? Server sekolah dapat melakukan binding ulang pada mesin baru.',
+        )
+    ) {
         router.post(`/admin/lisensi/${licId}/reset-hardware`);
     }
 };
@@ -310,37 +314,73 @@ const resetHardware = (licId: string) => {
                         :key="lic.id"
                         class="flex flex-col justify-between gap-4 rounded-xl border border-slate-800 bg-slate-950/60 p-4 text-xs lg:flex-row lg:items-center"
                     >
-                        <div class="space-y-1.5 flex-1">
+                        <div class="flex-1 space-y-1.5">
                             <div class="flex items-center gap-2">
-                                <span class="font-mono text-sm font-bold text-white">
+                                <span
+                                    class="font-mono text-sm font-bold text-white"
+                                >
                                     {{ lic.nomor_lisensi }}
                                 </span>
                                 <Badge
-                                    :variant="lic.model_lisensi === 'beli_putus' ? 'success' : 'info'"
+                                    :variant="
+                                        lic.model_lisensi === 'beli_putus'
+                                            ? 'success'
+                                            : 'info'
+                                    "
                                 >
-                                    {{ lic.model_lisensi === 'beli_putus' ? 'Beli Putus (On-Premise)' : 'Langganan (SaaS)' }}
+                                    {{
+                                        lic.model_lisensi === 'beli_putus'
+                                            ? 'Beli Putus (On-Premise)'
+                                            : 'Langganan (SaaS)'
+                                    }}
                                 </Badge>
-                                <Badge :variant="lic.status === 'active' ? 'success' : 'warning'">
+                                <Badge
+                                    :variant="
+                                        lic.status === 'active'
+                                            ? 'success'
+                                            : 'warning'
+                                    "
+                                >
                                     {{ lic.status }}
                                 </Badge>
                             </div>
-                            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-400">
+                            <div
+                                class="flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-400"
+                            >
                                 <span>
-                                    Serial Key: <strong class="font-mono text-emerald-400">{{ lic.serial_key || '-' }}</strong>
+                                    Serial Key:
+                                    <strong
+                                        class="font-mono text-emerald-400"
+                                        >{{ lic.serial_key || '-' }}</strong
+                                    >
                                 </span>
                                 <span>•</span>
                                 <span>
-                                    Domain Terdaftar: <strong class="text-slate-300">{{ lic.domain_terdaftar || 'Semua Domain' }}</strong>
+                                    Domain Terdaftar:
+                                    <strong class="text-slate-300">{{
+                                        lic.domain_terdaftar || 'Semua Domain'
+                                    }}</strong>
                                 </span>
                                 <span>•</span>
                                 <span>
-                                    Hardware Binding: <strong class="text-slate-300">{{ lic.hardware_fingerprint ? 'Terkunci' : 'Belum Terikat' }}</strong>
+                                    Hardware Binding:
+                                    <strong class="text-slate-300">{{
+                                        lic.hardware_fingerprint
+                                            ? 'Terkunci'
+                                            : 'Belum Terikat'
+                                    }}</strong>
                                 </span>
                             </div>
                             <p class="text-[11px] text-slate-500">
                                 Diterbitkan: {{ lic.tanggal_rilis }}
-                                <span v-if="lic.tanggal_kadaluarsa"> | Kadaluarsa: {{ lic.tanggal_kadaluarsa }}</span>
-                                <span v-if="lic.garansi_bugfix_hingga"> | Garansi Bugfix: {{ lic.garansi_bugfix_hingga }}</span>
+                                <span v-if="lic.tanggal_kadaluarsa">
+                                    | Kadaluarsa:
+                                    {{ lic.tanggal_kadaluarsa }}</span
+                                >
+                                <span v-if="lic.garansi_bugfix_hingga">
+                                    | Garansi Bugfix:
+                                    {{ lic.garansi_bugfix_hingga }}</span
+                                >
                             </p>
                         </div>
 
@@ -370,7 +410,8 @@ const resetHardware = (licId: string) => {
                                 class="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs font-semibold text-slate-300 hover:bg-slate-700"
                                 title="Unduh aksara-loader.php untuk deployment web hosting otomatis"
                             >
-                                <FileCode class="h-3.5 w-3.5 text-slate-400" /> Loader
+                                <FileCode class="h-3.5 w-3.5 text-slate-400" />
+                                Loader
                             </a>
 
                             <!-- Perpanjang -->
@@ -398,7 +439,8 @@ const resetHardware = (licId: string) => {
                         v-if="!klien.lisensis || klien.lisensis.length === 0"
                         class="py-6 text-center text-xs text-slate-500"
                     >
-                        Belum ada lisensi yang diterbitkan untuk sekolah ini. Klik <strong>+ Terbitkan Lisensi Baru</strong> di atas.
+                        Belum ada lisensi yang diterbitkan untuk sekolah ini.
+                        Klik <strong>+ Terbitkan Lisensi Baru</strong> di atas.
                     </div>
                 </div>
             </Card>
@@ -413,19 +455,28 @@ const resetHardware = (licId: string) => {
         >
             <form @submit.prevent="submitTerbitkanLisensi" class="space-y-4">
                 <div>
-                    <label class="mb-1 block text-xs font-medium text-slate-300">Model Lisensi</label>
+                    <label class="mb-1 block text-xs font-medium text-slate-300"
+                        >Model Lisensi</label
+                    >
                     <select
                         v-model="formLisensi.model_lisensi"
                         class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-slate-100"
                     >
-                        <option value="beli_putus">Beli Putus (On-Premise 100% Offline)</option>
-                        <option value="langganan">Berlangganan (SaaS Cloud)</option>
+                        <option value="beli_putus">
+                            Beli Putus (On-Premise 100% Offline)
+                        </option>
+                        <option value="langganan">
+                            Berlangganan (SaaS Cloud)
+                        </option>
                     </select>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-slate-300">Tier Paket</label>
+                        <label
+                            class="mb-1 block text-xs font-medium text-slate-300"
+                            >Tier Paket</label
+                        >
                         <select
                             v-model="formLisensi.tier_paket"
                             class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-slate-100"
@@ -436,8 +487,14 @@ const resetHardware = (licId: string) => {
                         </select>
                     </div>
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-slate-300">
-                            {{ formLisensi.model_lisensi === 'langganan' ? 'Durasi (Bulan)' : 'Garansi (Bulan)' }}
+                        <label
+                            class="mb-1 block text-xs font-medium text-slate-300"
+                        >
+                            {{
+                                formLisensi.model_lisensi === 'langganan'
+                                    ? 'Durasi (Bulan)'
+                                    : 'Garansi (Bulan)'
+                            }}
                         </label>
                         <Input
                             v-if="formLisensi.model_lisensi === 'langganan'"
@@ -455,7 +512,9 @@ const resetHardware = (licId: string) => {
                 </div>
 
                 <div>
-                    <label class="mb-1 block text-xs font-medium text-slate-300">Domain Terdaftar (Opsional)</label>
+                    <label class="mb-1 block text-xs font-medium text-slate-300"
+                        >Domain Terdaftar (Opsional)</label
+                    >
                     <Input
                         v-model="formLisensi.domain_terdaftar"
                         placeholder="lms.sekolah.sch.id"
@@ -463,7 +522,9 @@ const resetHardware = (licId: string) => {
                 </div>
 
                 <div>
-                    <label class="mb-1 block text-xs font-medium text-slate-300">Nilai Kontrak (Rp)</label>
+                    <label class="mb-1 block text-xs font-medium text-slate-300"
+                        >Nilai Kontrak (Rp)</label
+                    >
                     <Input
                         v-model="formLisensi.nilai_kontrak"
                         type="number"
@@ -471,7 +532,9 @@ const resetHardware = (licId: string) => {
                     />
                 </div>
 
-                <div class="flex justify-end gap-2 border-t border-slate-800 pt-4">
+                <div
+                    class="flex justify-end gap-2 border-t border-slate-800 pt-4"
+                >
                     <Button
                         type="button"
                         @click="isModalTerbitkanOpen = false"
@@ -485,7 +548,7 @@ const resetHardware = (licId: string) => {
                         :loading="formLisensi.processing"
                         variant="primary"
                         size="sm"
-                        class="bg-emerald-500 hover:bg-emerald-600 font-bold"
+                        class="bg-emerald-500 font-bold hover:bg-emerald-600"
                     >
                         Terbitkan Lisensi
                     </Button>
@@ -502,11 +565,17 @@ const resetHardware = (licId: string) => {
         >
             <form @submit.prevent="submitRenew" class="space-y-4 text-xs">
                 <p class="text-slate-400">
-                    Perpanjang lisensi <strong class="text-white">{{ selectedLicense?.nomor_lisensi }}</strong>.
+                    Perpanjang lisensi
+                    <strong class="text-white">{{
+                        selectedLicense?.nomor_lisensi
+                    }}</strong
+                    >.
                 </p>
 
                 <div>
-                    <label class="mb-1 block font-medium text-slate-300">Tambahan Durasi (Bulan)</label>
+                    <label class="mb-1 block font-medium text-slate-300"
+                        >Tambahan Durasi (Bulan)</label
+                    >
                     <Input
                         v-model="formRenew.perpanjang_bulan"
                         type="number"
@@ -516,7 +585,9 @@ const resetHardware = (licId: string) => {
                 </div>
 
                 <div>
-                    <label class="mb-1 block font-medium text-slate-300">Biaya Perpanjangan (Rp)</label>
+                    <label class="mb-1 block font-medium text-slate-300"
+                        >Biaya Perpanjangan (Rp)</label
+                    >
                     <Input
                         v-model="formRenew.nilai_kontrak_tambahan"
                         type="number"
@@ -524,7 +595,9 @@ const resetHardware = (licId: string) => {
                     />
                 </div>
 
-                <div class="flex justify-end gap-2 border-t border-slate-800 pt-4">
+                <div
+                    class="flex justify-end gap-2 border-t border-slate-800 pt-4"
+                >
                     <Button
                         type="button"
                         @click="isModalRenewOpen = false"
@@ -538,7 +611,7 @@ const resetHardware = (licId: string) => {
                         :loading="formRenew.processing"
                         variant="primary"
                         size="sm"
-                        class="bg-emerald-500 hover:bg-emerald-600 font-bold"
+                        class="bg-emerald-500 font-bold hover:bg-emerald-600"
                     >
                         Simpan Perpanjangan
                     </Button>

@@ -123,7 +123,7 @@ class BundleCustomizerService
                         // Get latest file by modification time
                         usort($files, fn ($a, $b) => filemtime($b) <=> filemtime($a));
 
-                        return array_values($files)[0];
+                        return $files[0];
                     }
                 }
             }
@@ -526,8 +526,8 @@ PHP;
         $token = $this->generateProvisionToken($lisensi, 48);
         $hubUrl = rtrim(config('app.url') ?? 'http://localhost', '/');
         $downloadUrl = "{$hubUrl}/api/v1/provision/download-bundle/{$token}";
-        $schoolName = $lisensi->klienSekolah?->nama_sekolah ?? 'Sekolah Klien AksaraEdu';
-        $npsn = $lisensi->klienSekolah?->npsn ?? '-';
+        $schoolName = $lisensi->klienSekolah->nama_sekolah ?? 'Sekolah Klien AksaraEdu';
+        $npsn = $lisensi->klienSekolah->npsn ?? '-';
         $licenseNo = $lisensi->nomor_lisensi ?? '-';
         $licenseModel = strtoupper($lisensi->model_lisensi ?? 'BELI_PUTUS');
         $expiryHuman = date('d M Y H:i', time() + (48 * 3600)).' WIB';
@@ -967,5 +967,3 @@ PHP_TEMPLATE;
         return str_replace(array_keys($replacements), array_values($replacements), $template);
     }
 }
-
-

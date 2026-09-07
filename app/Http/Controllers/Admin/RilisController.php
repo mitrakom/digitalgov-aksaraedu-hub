@@ -63,7 +63,7 @@ class RilisController extends Controller
         // Normalisasi nomor versi sebelum validasi unik
         if ($request->has('nomor_versi')) {
             $request->merge([
-                'nomor_versi' => ltrim(trim($request->input('nomor_versi')), 'vV')
+                'nomor_versi' => ltrim(trim($request->input('nomor_versi')), 'vV'),
             ]);
         }
 

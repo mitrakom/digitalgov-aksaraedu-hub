@@ -8,7 +8,6 @@ use App\Models\Lisensi;
 use App\Services\LicenseSignerService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -89,7 +88,7 @@ class KlienController extends Controller
             'status_klien' => $validated['status_klien'],
         ]);
 
-        if (!empty($validated['buat_lisensi'])) {
+        if (! empty($validated['buat_lisensi'])) {
             $this->issueLicenseForKlien($klien, [
                 'model_lisensi' => $validated['model_lisensi'] ?? 'beli_putus',
                 'tier_paket' => $validated['tier_paket'] ?? 'enterprise',
@@ -136,7 +135,7 @@ class KlienController extends Controller
 
         $tanggalKadaluarsa = null;
         if (($data['model_lisensi'] ?? 'beli_putus') === 'langganan') {
-            $durasiBulan = !empty($data['durasi_bulan']) ? (int) $data['durasi_bulan'] : 12;
+            $durasiBulan = ! empty($data['durasi_bulan']) ? (int) $data['durasi_bulan'] : 12;
             $tanggalKadaluarsa = $tanggalRilis->copy()->addMonths($durasiBulan);
             $garansiBugfix = $tanggalKadaluarsa->copy();
         } else {
@@ -225,4 +224,3 @@ class KlienController extends Controller
             ->with('success', 'Data sekolah berhasil dihapus.');
     }
 }
-

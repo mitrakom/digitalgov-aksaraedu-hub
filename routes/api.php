@@ -45,7 +45,6 @@ Route::prefix('v1')->group(function () {
         ->middleware('throttle:30,1');
 });
 
-
 // 6. Post-Deploy Webhook Trigger (Auto-Extract, Migrate, & Cache Optimization)
 Route::post('/deploy-webhook', [DeployWebhookController::class, 'handle'])
     ->middleware('throttle:10,1');

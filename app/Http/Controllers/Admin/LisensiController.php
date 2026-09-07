@@ -220,7 +220,7 @@ class LisensiController extends Controller
         $lisensi = Lisensi::with('klienSekolah')->findOrFail($id);
 
         $loaderContent = $bundleCustomizer->generateWebLoaderScript($lisensi);
-        $filename = "aksara-loader.php";
+        $filename = 'aksara-loader.php';
 
         return response($loaderContent, 200, [
             'Content-Type' => 'application/x-php',
@@ -228,4 +228,3 @@ class LisensiController extends Controller
         ]);
     }
 }
-

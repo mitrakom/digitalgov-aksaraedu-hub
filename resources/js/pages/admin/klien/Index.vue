@@ -140,7 +140,11 @@ const submitRenew = () => {
 };
 
 const resetHardware = (licId: string) => {
-    if (confirm('Reset pengikatan Hardware Fingerprint? Server sekolah dapat melakukan binding ulang pada perangkat baru.')) {
+    if (
+        confirm(
+            'Reset pengikatan Hardware Fingerprint? Server sekolah dapat melakukan binding ulang pada perangkat baru.',
+        )
+    ) {
         router.post(`/admin/lisensi/${licId}/reset-hardware`);
     }
 };
@@ -172,7 +176,9 @@ const formatCurrency = (val: number) => {
                 <h1 class="text-base font-bold tracking-tight text-slate-100">
                     Sekolah
                 </h1>
-                <span class="rounded-md border border-slate-700 bg-slate-800 px-2 py-0.5 text-[11px] text-slate-400">
+                <span
+                    class="rounded-md border border-slate-700 bg-slate-800 px-2 py-0.5 text-[11px] text-slate-400"
+                >
                     Data Sekolah & Lisensi
                 </span>
             </div>
@@ -180,7 +186,9 @@ const formatCurrency = (val: number) => {
 
         <div class="space-y-6">
             <!-- Top Action & Filter Bar -->
-            <div class="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
+            <div
+                class="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center"
+            >
                 <div class="flex flex-1 flex-col gap-2.5 sm:flex-row">
                     <div class="relative flex-1">
                         <Input
@@ -226,7 +234,8 @@ const formatCurrency = (val: number) => {
                         class="border-slate-700 text-slate-300 hover:text-white"
                         title="Lihat Public Key RSA Otoritas"
                     >
-                        <KeyRound class="mr-1.5 h-3.5 w-3.5 text-emerald-400" /> Kunci RSA
+                        <KeyRound class="mr-1.5 h-3.5 w-3.5 text-emerald-400" />
+                        Kunci RSA
                     </Button>
 
                     <Button
@@ -244,7 +253,9 @@ const formatCurrency = (val: number) => {
             <Card class="border-slate-800 bg-slate-900">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs">
-                        <thead class="border-b border-slate-800 bg-slate-950/60 font-semibold tracking-wider text-slate-400 uppercase">
+                        <thead
+                            class="border-b border-slate-800 bg-slate-950/60 font-semibold tracking-wider text-slate-400 uppercase"
+                        >
                             <tr>
                                 <th class="px-4 py-3">Sekolah</th>
                                 <th class="px-4 py-3">Kontak PIC</th>
@@ -253,7 +264,9 @@ const formatCurrency = (val: number) => {
                                 <th class="px-4 py-3 text-right">Navigasi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800/60 text-slate-300">
+                        <tbody
+                            class="divide-y divide-slate-800/60 text-slate-300"
+                        >
                             <tr
                                 v-for="klien in kliens.data"
                                 :key="klien.id"
@@ -262,22 +275,36 @@ const formatCurrency = (val: number) => {
                                 <!-- Kolom 1: Profil Sekolah -->
                                 <td class="px-4 py-3.5">
                                     <div class="flex items-start gap-2.5">
-                                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
+                                        <div
+                                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
+                                        >
                                             <School class="h-4 w-4" />
                                         </div>
                                         <div>
-                                            <p class="text-sm font-bold text-white">
+                                            <p
+                                                class="text-sm font-bold text-white"
+                                            >
                                                 {{ klien.nama_sekolah }}
                                             </p>
-                                            <div class="mt-0.5 flex items-center gap-2 text-[11px]">
-                                                <span class="font-mono font-semibold text-emerald-400">
+                                            <div
+                                                class="mt-0.5 flex items-center gap-2 text-[11px]"
+                                            >
+                                                <span
+                                                    class="font-mono font-semibold text-emerald-400"
+                                                >
                                                     NPSN: {{ klien.npsn }}
                                                 </span>
-                                                <span class="text-slate-500">•</span>
-                                                <span class="uppercase font-semibold text-slate-300">
+                                                <span class="text-slate-500"
+                                                    >•</span
+                                                >
+                                                <span
+                                                    class="font-semibold text-slate-300 uppercase"
+                                                >
                                                     {{ klien.tipe_sekolah }}
                                                 </span>
-                                                <span class="text-slate-500">•</span>
+                                                <span class="text-slate-500"
+                                                    >•</span
+                                                >
                                                 <span class="text-slate-400">
                                                     {{ klien.kabupaten_kota }}
                                                 </span>
@@ -291,48 +318,99 @@ const formatCurrency = (val: number) => {
                                     <p class="font-semibold text-slate-200">
                                         {{ klien.nama_pic }}
                                     </p>
-                                    <div class="mt-0.5 flex items-center gap-2 text-[11px] text-slate-400">
+                                    <div
+                                        class="mt-0.5 flex items-center gap-2 text-[11px] text-slate-400"
+                                    >
                                         <span>{{ klien.kontak_pic_wa }}</span>
                                     </div>
-                                    <p class="truncate text-[10px] text-slate-500">
+                                    <p
+                                        class="truncate text-[10px] text-slate-500"
+                                    >
                                         {{ klien.email_pic }}
                                     </p>
                                 </td>
 
                                 <!-- Kolom 3: Lisensi Terkini -->
                                 <td class="px-4 py-3.5">
-                                    <div v-if="klien.lisensis && klien.lisensis.length > 0">
+                                    <div
+                                        v-if="
+                                            klien.lisensis &&
+                                            klien.lisensis.length > 0
+                                        "
+                                    >
                                         <div class="flex items-center gap-1.5">
                                             <Badge
-                                                :variant="klien.lisensis[0].model_lisensi === 'beli_putus' ? 'success' : 'info'"
+                                                :variant="
+                                                    klien.lisensis[0]
+                                                        .model_lisensi ===
+                                                    'beli_putus'
+                                                        ? 'success'
+                                                        : 'info'
+                                                "
                                                 size="sm"
                                             >
-                                                {{ klien.lisensis[0].model_lisensi === 'beli_putus' ? 'Beli Putus' : 'SaaS Cloud' }}
+                                                {{
+                                                    klien.lisensis[0]
+                                                        .model_lisensi ===
+                                                    'beli_putus'
+                                                        ? 'Beli Putus'
+                                                        : 'SaaS Cloud'
+                                                }}
                                             </Badge>
                                             <span
                                                 class="rounded px-1.5 py-0.5 text-[10px] font-bold uppercase"
-                                                :class="klien.lisensis[0].status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'"
+                                                :class="
+                                                    klien.lisensis[0].status ===
+                                                    'active'
+                                                        ? 'bg-emerald-500/10 text-emerald-400'
+                                                        : 'bg-amber-500/10 text-amber-400'
+                                                "
                                             >
                                                 {{ klien.lisensis[0].status }}
                                             </span>
                                         </div>
 
-                                        <p class="mt-1 font-mono text-[11px] text-slate-300">
-                                            {{ klien.lisensis[0].nomor_lisensi }}
+                                        <p
+                                            class="mt-1 font-mono text-[11px] text-slate-300"
+                                        >
+                                            {{
+                                                klien.lisensis[0].nomor_lisensi
+                                            }}
                                         </p>
 
-                                        <p v-if="klien.lisensis[0].model_lisensi === 'langganan' && klien.lisensis[0].tanggal_kadaluarsa" class="text-[10px] text-slate-400">
-                                            Berlaku s/d {{ klien.lisensis[0].tanggal_kadaluarsa }}
+                                        <p
+                                            v-if="
+                                                klien.lisensis[0]
+                                                    .model_lisensi ===
+                                                    'langganan' &&
+                                                klien.lisensis[0]
+                                                    .tanggal_kadaluarsa
+                                            "
+                                            class="text-[10px] text-slate-400"
+                                        >
+                                            Berlaku s/d
+                                            {{
+                                                klien.lisensis[0]
+                                                    .tanggal_kadaluarsa
+                                            }}
                                         </p>
-                                        <p v-else class="text-[10px] text-emerald-400/80">
+                                        <p
+                                            v-else
+                                            class="text-[10px] text-emerald-400/80"
+                                        >
                                             Lisensi Permanen (Offline Ready)
                                         </p>
                                     </div>
                                     <div v-else class="space-y-1">
-                                        <span class="text-[11px] text-slate-500 italic">Belum ada lisensi</span>
+                                        <span
+                                            class="text-[11px] text-slate-500 italic"
+                                            >Belum ada lisensi</span
+                                        >
                                         <div>
                                             <button
-                                                @click="openTerbitkanModal(klien)"
+                                                @click="
+                                                    openTerbitkanModal(klien)
+                                                "
                                                 class="inline-flex items-center text-[11px] font-semibold text-emerald-400 hover:underline"
                                             >
                                                 + Terbitkan Lisensi
@@ -343,7 +421,13 @@ const formatCurrency = (val: number) => {
 
                                 <!-- Kolom 4: Aksi Cepat Lisensi -->
                                 <td class="px-4 py-3.5">
-                                    <div v-if="klien.lisensis && klien.lisensis.length > 0" class="flex flex-wrap items-center gap-1.5">
+                                    <div
+                                        v-if="
+                                            klien.lisensis &&
+                                            klien.lisensis.length > 0
+                                        "
+                                        class="flex flex-wrap items-center gap-1.5"
+                                    >
                                         <!-- Unduh Berkas .lic -->
                                         <a
                                             :href="`/admin/lisensi/${klien.lisensis[0].id}/download`"
@@ -364,8 +448,16 @@ const formatCurrency = (val: number) => {
 
                                         <!-- Perpanjang (Khusus SaaS) -->
                                         <button
-                                            v-if="klien.lisensis[0].model_lisensi === 'langganan'"
-                                            @click="openRenewModal(klien.lisensis[0])"
+                                            v-if="
+                                                klien.lisensis[0]
+                                                    .model_lisensi ===
+                                                'langganan'
+                                            "
+                                            @click="
+                                                openRenewModal(
+                                                    klien.lisensis[0],
+                                                )
+                                            "
                                             class="inline-flex items-center gap-1 rounded-lg border border-slate-700 bg-slate-800 px-2 py-1 text-[11px] font-semibold text-slate-300 hover:bg-slate-700"
                                             title="Perpanjang masa aktif lisensi"
                                         >
@@ -374,8 +466,15 @@ const formatCurrency = (val: number) => {
 
                                         <!-- Reset Hardware -->
                                         <button
-                                            v-if="klien.lisensis[0].hardware_fingerprint"
-                                            @click="resetHardware(klien.lisensis[0].id)"
+                                            v-if="
+                                                klien.lisensis[0]
+                                                    .hardware_fingerprint
+                                            "
+                                            @click="
+                                                resetHardware(
+                                                    klien.lisensis[0].id,
+                                                )
+                                            "
                                             class="inline-flex items-center rounded-lg border border-slate-700 bg-slate-800 p-1 text-[11px] text-slate-400 hover:text-amber-400"
                                             title="Reset pengikatan Hardware Fingerprint"
                                         >
@@ -383,7 +482,9 @@ const formatCurrency = (val: number) => {
                                         </button>
                                     </div>
                                     <div v-else>
-                                        <span class="text-[11px] text-slate-500">-</span>
+                                        <span class="text-[11px] text-slate-500"
+                                            >-</span
+                                        >
                                     </div>
                                 </td>
 
@@ -400,8 +501,14 @@ const formatCurrency = (val: number) => {
                             </tr>
 
                             <tr v-if="kliens.data.length === 0">
-                                <td colspan="5" class="py-12 text-center text-xs text-slate-500">
-                                    Belum ada data sekolah yang terdaftar. Klik tombol <strong>+ Tambah Sekolah</strong> untuk memulai.
+                                <td
+                                    colspan="5"
+                                    class="py-12 text-center text-xs text-slate-500"
+                                >
+                                    Belum ada data sekolah yang terdaftar. Klik
+                                    tombol
+                                    <strong>+ Tambah Sekolah</strong> untuk
+                                    memulai.
                                 </td>
                             </tr>
                         </tbody>
@@ -409,9 +516,24 @@ const formatCurrency = (val: number) => {
                 </div>
 
                 <!-- Pagination Links jika ada -->
-                <div v-if="kliens.links && kliens.links.length > 3" class="flex items-center justify-between border-t border-slate-800 px-4 py-3 text-xs">
+                <div
+                    v-if="kliens.links && kliens.links.length > 3"
+                    class="flex items-center justify-between border-t border-slate-800 px-4 py-3 text-xs"
+                >
                     <p class="text-slate-400">
-                        Menampilkan <span class="font-semibold text-white">{{ kliens.from || 0 }}</span> sampai <span class="font-semibold text-white">{{ kliens.to || 0 }}</span> dari <span class="font-semibold text-white">{{ kliens.total }}</span> sekolah
+                        Menampilkan
+                        <span class="font-semibold text-white">{{
+                            kliens.from || 0
+                        }}</span>
+                        sampai
+                        <span class="font-semibold text-white">{{
+                            kliens.to || 0
+                        }}</span>
+                        dari
+                        <span class="font-semibold text-white">{{
+                            kliens.total
+                        }}</span>
+                        sekolah
                     </p>
                     <div class="flex gap-1">
                         <Link
@@ -419,7 +541,13 @@ const formatCurrency = (val: number) => {
                             :key="link.label"
                             :href="link.url || '#'"
                             class="rounded-md px-2.5 py-1 text-xs transition-colors"
-                            :class="link.active ? 'bg-emerald-600 text-white font-bold' : link.url ? 'text-slate-400 hover:bg-slate-800 hover:text-white' : 'text-slate-600 pointer-events-none'"
+                            :class="
+                                link.active
+                                    ? 'bg-emerald-600 font-bold text-white'
+                                    : link.url
+                                      ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                                      : 'pointer-events-none text-slate-600'
+                            "
                             v-html="link.label"
                         />
                     </div>
@@ -437,13 +565,18 @@ const formatCurrency = (val: number) => {
             <form @submit.prevent="submitTambahSekolah" class="space-y-4">
                 <!-- Bagian 1: Identitas Sekolah -->
                 <div class="space-y-3">
-                    <h3 class="text-xs font-bold tracking-wide text-slate-300 uppercase">
+                    <h3
+                        class="text-xs font-bold tracking-wide text-slate-300 uppercase"
+                    >
                         1. Data Sekolah
                     </h3>
 
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                            <label class="mb-1 block text-xs font-semibold text-slate-300">NPSN (8 Digit)</label>
+                            <label
+                                class="mb-1 block text-xs font-semibold text-slate-300"
+                                >NPSN (8 Digit)</label
+                            >
                             <Input
                                 v-model="formTambah.npsn"
                                 placeholder="Contoh: 20104050"
@@ -452,7 +585,10 @@ const formatCurrency = (val: number) => {
                             />
                         </div>
                         <div>
-                            <label class="mb-1 block text-xs font-semibold text-slate-300">Jenjang</label>
+                            <label
+                                class="mb-1 block text-xs font-semibold text-slate-300"
+                                >Jenjang</label
+                            >
                             <select
                                 v-model="formTambah.tipe_sekolah"
                                 class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-slate-100"
@@ -468,7 +604,10 @@ const formatCurrency = (val: number) => {
                     </div>
 
                     <div>
-                        <label class="mb-1 block text-xs font-semibold text-slate-300">Nama Sekolah</label>
+                        <label
+                            class="mb-1 block text-xs font-semibold text-slate-300"
+                            >Nama Sekolah</label
+                        >
                         <Input
                             v-model="formTambah.nama_sekolah"
                             placeholder="Contoh: SMK Negeri 1 Kota Bandung"
@@ -479,7 +618,10 @@ const formatCurrency = (val: number) => {
 
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                            <label class="mb-1 block text-xs font-semibold text-slate-300">Nama PIC / Penanggung Jawab</label>
+                            <label
+                                class="mb-1 block text-xs font-semibold text-slate-300"
+                                >Nama PIC / Penanggung Jawab</label
+                            >
                             <Input
                                 v-model="formTambah.nama_pic"
                                 placeholder="Contoh: Drs. H. Mulyadi, M.Kom"
@@ -487,7 +629,10 @@ const formatCurrency = (val: number) => {
                             />
                         </div>
                         <div>
-                            <label class="mb-1 block text-xs font-semibold text-slate-300">No. WhatsApp PIC</label>
+                            <label
+                                class="mb-1 block text-xs font-semibold text-slate-300"
+                                >No. WhatsApp PIC</label
+                            >
                             <Input
                                 v-model="formTambah.kontak_pic_wa"
                                 placeholder="Contoh: 081234567890"
@@ -498,7 +643,10 @@ const formatCurrency = (val: number) => {
 
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                            <label class="mb-1 block text-xs font-semibold text-slate-300">Email Resmi</label>
+                            <label
+                                class="mb-1 block text-xs font-semibold text-slate-300"
+                                >Email Resmi</label
+                            >
                             <Input
                                 v-model="formTambah.email_pic"
                                 type="email"
@@ -507,7 +655,10 @@ const formatCurrency = (val: number) => {
                             />
                         </div>
                         <div>
-                            <label class="mb-1 block text-xs font-semibold text-slate-300">Kota / Kabupaten</label>
+                            <label
+                                class="mb-1 block text-xs font-semibold text-slate-300"
+                                >Kota / Kabupaten</label
+                            >
                             <Input
                                 v-model="formTambah.kabupaten_kota"
                                 placeholder="Kota Bandung"
@@ -518,15 +669,21 @@ const formatCurrency = (val: number) => {
                 </div>
 
                 <!-- Bagian 2: Lisensi Terpadu -->
-                <div class="rounded-xl border border-slate-800 bg-slate-950/60 p-4 space-y-3">
+                <div
+                    class="space-y-3 rounded-xl border border-slate-800 bg-slate-950/60 p-4"
+                >
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <KeyRound class="h-4 w-4 text-emerald-400" />
-                            <h3 class="text-xs font-bold tracking-wide text-white uppercase">
+                            <h3
+                                class="text-xs font-bold tracking-wide text-white uppercase"
+                            >
                                 2. Penerbitan Lisensi Otomatis
                             </h3>
                         </div>
-                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-300 cursor-pointer">
+                        <label
+                            class="flex cursor-pointer items-center gap-2 text-xs font-semibold text-slate-300"
+                        >
                             <input
                                 type="checkbox"
                                 v-model="formTambah.buat_lisensi"
@@ -536,21 +693,37 @@ const formatCurrency = (val: number) => {
                         </label>
                     </div>
 
-                    <div v-if="formTambah.buat_lisensi" class="grid grid-cols-1 gap-3 sm:grid-cols-2 pt-2 border-t border-slate-800">
+                    <div
+                        v-if="formTambah.buat_lisensi"
+                        class="grid grid-cols-1 gap-3 border-t border-slate-800 pt-2 sm:grid-cols-2"
+                    >
                         <div>
-                            <label class="mb-1 block text-xs font-medium text-slate-400">Model Lisensi</label>
+                            <label
+                                class="mb-1 block text-xs font-medium text-slate-400"
+                                >Model Lisensi</label
+                            >
                             <select
                                 v-model="formTambah.model_lisensi"
                                 class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-slate-100"
                             >
-                                <option value="beli_putus">Beli Putus (On-Premise / 100% Offline)</option>
-                                <option value="langganan">Berlangganan (SaaS Cloud)</option>
+                                <option value="beli_putus">
+                                    Beli Putus (On-Premise / 100% Offline)
+                                </option>
+                                <option value="langganan">
+                                    Berlangganan (SaaS Cloud)
+                                </option>
                             </select>
                         </div>
 
                         <div>
-                            <label class="mb-1 block text-xs font-medium text-slate-400">
-                                {{ formTambah.model_lisensi === 'langganan' ? 'Durasi Langganan (Bulan)' : 'Masa Garansi Bugfix (Bulan)' }}
+                            <label
+                                class="mb-1 block text-xs font-medium text-slate-400"
+                            >
+                                {{
+                                    formTambah.model_lisensi === 'langganan'
+                                        ? 'Durasi Langganan (Bulan)'
+                                        : 'Masa Garansi Bugfix (Bulan)'
+                                }}
                             </label>
                             <Input
                                 v-if="formTambah.model_lisensi === 'langganan'"
@@ -567,7 +740,10 @@ const formatCurrency = (val: number) => {
                         </div>
 
                         <div>
-                            <label class="mb-1 block text-xs font-medium text-slate-400">Domain Terdaftar (Opsional)</label>
+                            <label
+                                class="mb-1 block text-xs font-medium text-slate-400"
+                                >Domain Terdaftar (Opsional)</label
+                            >
                             <Input
                                 v-model="formTambah.domain_terdaftar"
                                 placeholder="lms.smkn1bdg.sch.id"
@@ -575,7 +751,10 @@ const formatCurrency = (val: number) => {
                         </div>
 
                         <div>
-                            <label class="mb-1 block text-xs font-medium text-slate-400">Nilai Kontrak (Rp)</label>
+                            <label
+                                class="mb-1 block text-xs font-medium text-slate-400"
+                                >Nilai Kontrak (Rp)</label
+                            >
                             <Input
                                 v-model="formTambah.nilai_kontrak"
                                 type="number"
@@ -585,7 +764,9 @@ const formatCurrency = (val: number) => {
                     </div>
                 </div>
 
-                <div class="flex justify-end gap-2 border-t border-slate-800 pt-4">
+                <div
+                    class="flex justify-end gap-2 border-t border-slate-800 pt-4"
+                >
                     <Button
                         type="button"
                         @click="isModalTambahOpen = false"
@@ -599,7 +780,7 @@ const formatCurrency = (val: number) => {
                         :loading="formTambah.processing"
                         variant="primary"
                         size="sm"
-                        class="bg-emerald-500 hover:bg-emerald-600 font-bold"
+                        class="bg-emerald-500 font-bold hover:bg-emerald-600"
                     >
                         Simpan & Terbitkan
                     </Button>
@@ -616,7 +797,10 @@ const formatCurrency = (val: number) => {
         >
             <div class="space-y-4 text-xs text-slate-300">
                 <p>
-                    Kunci publik ini digunakan pada aplikasi klien sekolah (<code class="text-emerald-400">AksaraEdu LMS Instance</code>) untuk memverifikasi keaslian dan integritas payload berkas lisensi secara offline.
+                    Kunci publik ini digunakan pada aplikasi klien sekolah
+                    (<code class="text-emerald-400">AksaraEdu LMS Instance</code
+                    >) untuk memverifikasi keaslian dan integritas payload
+                    berkas lisensi secara offline.
                 </p>
 
                 <div class="relative">
@@ -628,9 +812,15 @@ const formatCurrency = (val: number) => {
                     ></textarea>
                 </div>
 
-                <div class="flex items-center justify-between border-t border-slate-800 pt-3">
-                    <span v-if="copySuccess" class="flex items-center gap-1.5 text-xs text-emerald-400">
-                        <CheckCircle2 class="h-4 w-4" /> Kunci publik berhasil disalin!
+                <div
+                    class="flex items-center justify-between border-t border-slate-800 pt-3"
+                >
+                    <span
+                        v-if="copySuccess"
+                        class="flex items-center gap-1.5 text-xs text-emerald-400"
+                    >
+                        <CheckCircle2 class="h-4 w-4" /> Kunci publik berhasil
+                        disalin!
                     </span>
                     <span v-else class="text-[11px] text-slate-500">
                         Ditanam secara otomatis pada instance rilis.
@@ -657,19 +847,28 @@ const formatCurrency = (val: number) => {
         >
             <form @submit.prevent="submitTerbitkanLisensi" class="space-y-4">
                 <div>
-                    <label class="mb-1 block text-xs font-medium text-slate-300">Model Lisensi</label>
+                    <label class="mb-1 block text-xs font-medium text-slate-300"
+                        >Model Lisensi</label
+                    >
                     <select
                         v-model="formLisensi.model_lisensi"
                         class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-slate-100"
                     >
-                        <option value="beli_putus">Beli Putus (On-Premise 100% Offline)</option>
-                        <option value="langganan">Berlangganan (SaaS Cloud)</option>
+                        <option value="beli_putus">
+                            Beli Putus (On-Premise 100% Offline)
+                        </option>
+                        <option value="langganan">
+                            Berlangganan (SaaS Cloud)
+                        </option>
                     </select>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-slate-300">Tier Paket</label>
+                        <label
+                            class="mb-1 block text-xs font-medium text-slate-300"
+                            >Tier Paket</label
+                        >
                         <select
                             v-model="formLisensi.tier_paket"
                             class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-slate-100"
@@ -680,8 +879,14 @@ const formatCurrency = (val: number) => {
                         </select>
                     </div>
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-slate-300">
-                            {{ formLisensi.model_lisensi === 'langganan' ? 'Durasi (Bulan)' : 'Garansi (Bulan)' }}
+                        <label
+                            class="mb-1 block text-xs font-medium text-slate-300"
+                        >
+                            {{
+                                formLisensi.model_lisensi === 'langganan'
+                                    ? 'Durasi (Bulan)'
+                                    : 'Garansi (Bulan)'
+                            }}
                         </label>
                         <Input
                             v-if="formLisensi.model_lisensi === 'langganan'"
@@ -699,7 +904,9 @@ const formatCurrency = (val: number) => {
                 </div>
 
                 <div>
-                    <label class="mb-1 block text-xs font-medium text-slate-300">Domain Terdaftar (Opsional)</label>
+                    <label class="mb-1 block text-xs font-medium text-slate-300"
+                        >Domain Terdaftar (Opsional)</label
+                    >
                     <Input
                         v-model="formLisensi.domain_terdaftar"
                         placeholder="lms.sekolah.sch.id"
@@ -707,7 +914,9 @@ const formatCurrency = (val: number) => {
                 </div>
 
                 <div>
-                    <label class="mb-1 block text-xs font-medium text-slate-300">Nilai Kontrak (Rp)</label>
+                    <label class="mb-1 block text-xs font-medium text-slate-300"
+                        >Nilai Kontrak (Rp)</label
+                    >
                     <Input
                         v-model="formLisensi.nilai_kontrak"
                         type="number"
@@ -715,7 +924,9 @@ const formatCurrency = (val: number) => {
                     />
                 </div>
 
-                <div class="flex justify-end gap-2 border-t border-slate-800 pt-4">
+                <div
+                    class="flex justify-end gap-2 border-t border-slate-800 pt-4"
+                >
                     <Button
                         type="button"
                         @click="isModalTerbitkanOpen = false"
@@ -746,11 +957,17 @@ const formatCurrency = (val: number) => {
         >
             <form @submit.prevent="submitRenew" class="space-y-4 text-xs">
                 <p class="text-slate-400">
-                    Perpanjang masa aktif lisensi untuk <strong class="text-white">{{ selectedLicense?.nomor_lisensi }}</strong>.
+                    Perpanjang masa aktif lisensi untuk
+                    <strong class="text-white">{{
+                        selectedLicense?.nomor_lisensi
+                    }}</strong
+                    >.
                 </p>
 
                 <div>
-                    <label class="mb-1 block font-medium text-slate-300">Tambahan Durasi (Bulan)</label>
+                    <label class="mb-1 block font-medium text-slate-300"
+                        >Tambahan Durasi (Bulan)</label
+                    >
                     <Input
                         v-model="formRenew.perpanjang_bulan"
                         type="number"
@@ -760,7 +977,9 @@ const formatCurrency = (val: number) => {
                 </div>
 
                 <div>
-                    <label class="mb-1 block font-medium text-slate-300">Biaya Perpanjangan Tambahan (Rp)</label>
+                    <label class="mb-1 block font-medium text-slate-300"
+                        >Biaya Perpanjangan Tambahan (Rp)</label
+                    >
                     <Input
                         v-model="formRenew.nilai_kontrak_tambahan"
                         type="number"
@@ -768,7 +987,9 @@ const formatCurrency = (val: number) => {
                     />
                 </div>
 
-                <div class="flex justify-end gap-2 border-t border-slate-800 pt-4">
+                <div
+                    class="flex justify-end gap-2 border-t border-slate-800 pt-4"
+                >
                     <Button
                         type="button"
                         @click="isModalRenewOpen = false"
@@ -782,7 +1003,7 @@ const formatCurrency = (val: number) => {
                         :loading="formRenew.processing"
                         variant="primary"
                         size="sm"
-                        class="bg-emerald-500 hover:bg-emerald-600 font-bold"
+                        class="bg-emerald-500 font-bold hover:bg-emerald-600"
                     >
                         Simpan Perpanjangan
                     </Button>

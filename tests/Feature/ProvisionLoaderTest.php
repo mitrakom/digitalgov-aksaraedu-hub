@@ -15,6 +15,7 @@ class ProvisionLoaderTest extends TestCase
     use RefreshDatabase;
 
     protected User $admin;
+
     protected Lisensi $lisensi;
 
     protected function setUp(): void
