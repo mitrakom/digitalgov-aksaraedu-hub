@@ -165,6 +165,10 @@ class UpdateApiController extends Controller
             'file' => 'nullable|file|mimes:zip|max:307200', // max 300MB
         ]);
 
+        // Bersihkan prefix 'v' jika ada agar konsisten semver (cth: 'v1.0.6' -> '1.0.6')
+        $cleanVersion = ltrim($validated['nomor_versi'], 'vV');
+        $validated['nomor_versi'] = $cleanVersion;
+
         $filePath = null;
         if ($request->hasFile('file')) {
             $filePath = $request->file('file')->storeAs('releases', 'aksaraedu-lms-'.$validated['nomor_versi'].'.zip');

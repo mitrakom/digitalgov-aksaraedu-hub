@@ -60,6 +60,13 @@ class RilisController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        // Normalisasi nomor versi sebelum validasi unik
+        if ($request->has('nomor_versi')) {
+            $request->merge([
+                'nomor_versi' => ltrim(trim($request->input('nomor_versi')), 'vV')
+            ]);
+        }
+
         $validated = $request->validate([
             'nomor_versi' => 'required|string|max:30|unique:rilis_pembaruans,nomor_versi',
             'tipe_rilis' => 'required|in:patch_bugfix,minor_feature,major_curriculum',
@@ -68,7 +75,17 @@ class RilisController extends Controller
             'is_public' => 'boolean',
             'is_critical_patch' => 'boolean',
             'checksum_sha256' => 'nullable|string|max:64',
+            'file' => 'nullable|file|mimes:zip|max:307200', // max 300MB
         ]);
+
+        $filePath = null;
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->storeAs('releases', 'aksaraedu-lms-'.$validated['nomor_versi'].'.zip');
+            if (empty($validated['checksum_sha256'])) {
+                $targetFile = Storage::disk('local')->path($filePath);
+                $validated['checksum_sha256'] = file_exists($targetFile) ? hash_file('sha256', $targetFile) : null;
+            }
+        }
 
         $checksum = $validated['checksum_sha256'] ?: hash('sha256', $validated['nomor_versi'].now());
 
@@ -84,6 +101,7 @@ class RilisController extends Controller
             'tipe_rilis' => $validated['tipe_rilis'],
             'ringkasan_perubahan' => $validated['ringkasan_perubahan'],
             'minimal_versi_lms' => $validated['minimal_versi_lms'],
+            'file_path_zip' => $filePath,
             'is_public' => $request->boolean('is_public', true),
             'is_critical_patch' => $request->boolean('is_critical_patch', false),
             'checksum_sha256' => $checksum,

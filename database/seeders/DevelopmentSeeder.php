@@ -205,6 +205,20 @@ class DevelopmentSeeder extends Seeder
 
         // 6. Rilis Pembaruan (Update Registry)
         RilisPembaruan::firstOrCreate(
+            ['nomor_versi' => '1.0.6'],
+            [
+                'tipe_rilis' => 'minor_feature',
+                'ringkasan_perubahan' => "• Penambahan fitur Rapid Grading pada penilaian portofolio guru.\n• Sinkronisasi otomatis presensi harian KBM & kalender akademik.\n• Peningkatan sistem otentikasi RSA token dan audit trail pembaruan.",
+                'checksum_sha256' => 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+                'file_signature' => 'RSA_SIGNED_HASH_V1_0_6_VALIDATED',
+                'minimal_versi_lms' => '1.0.0',
+                'is_public' => true,
+                'is_critical_patch' => false,
+                'published_at' => now()->subHours(6),
+            ]
+        );
+
+        RilisPembaruan::firstOrCreate(
             ['nomor_versi' => '1.0.1'],
             [
                 'tipe_rilis' => 'patch_bugfix',
