@@ -4,13 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\KlienSekolah;
+use App\Models\Lisensi;
+use App\Services\LicenseSignerService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class KlienController extends Controller
 {
+    public function __construct(
+        protected LicenseSignerService $licenseSigner
+    ) {}
+
     public function index(Request $request): Response
     {
         $query = KlienSekolah::with(['lisensis' => function ($q) {
@@ -40,6 +47,7 @@ class KlienController extends Controller
         return Inertia::render('admin/klien/Index', [
             'kliens' => $kliens,
             'filters' => $request->only(['search', 'tipe_sekolah', 'status_klien']),
+            'publicKey' => $this->licenseSigner->getPublicKey(),
         ]);
     }
 
@@ -57,17 +65,123 @@ class KlienController extends Controller
             'kabupaten_kota' => 'required|string|max:100',
             'alamat_lengkap' => 'nullable|string',
             'status_klien' => 'required|in:aktif,prospek,berhenti',
+            'buat_lisensi' => 'nullable|boolean',
+            'model_lisensi' => 'nullable|in:beli_putus,langganan',
+            'tier_paket' => 'nullable|in:lite,standar,enterprise',
+            'domain_terdaftar' => 'nullable|string|max:100',
+            'durasi_bulan' => 'nullable|integer|min:1',
+            'garansi_bulan' => 'nullable|integer|min:0',
+            'nilai_kontrak' => 'nullable|numeric|min:0',
+            'catatan_kontrak' => 'nullable|string',
         ]);
 
-        KlienSekolah::create($validated);
+        $klien = KlienSekolah::create([
+            'npsn' => $validated['npsn'],
+            'nama_sekolah' => $validated['nama_sekolah'],
+            'tipe_sekolah' => $validated['tipe_sekolah'],
+            'yayasan_induk' => $validated['yayasan_induk'] ?? null,
+            'nama_pic' => $validated['nama_pic'],
+            'kontak_pic_wa' => $validated['kontak_pic_wa'],
+            'email_pic' => $validated['email_pic'],
+            'provinsi' => $validated['provinsi'],
+            'kabupaten_kota' => $validated['kabupaten_kota'],
+            'alamat_lengkap' => $validated['alamat_lengkap'] ?? null,
+            'status_klien' => $validated['status_klien'],
+        ]);
+
+        if (!empty($validated['buat_lisensi'])) {
+            $this->issueLicenseForKlien($klien, [
+                'model_lisensi' => $validated['model_lisensi'] ?? 'beli_putus',
+                'tier_paket' => $validated['tier_paket'] ?? 'enterprise',
+                'domain_terdaftar' => $validated['domain_terdaftar'] ?? null,
+                'durasi_bulan' => $validated['durasi_bulan'] ?? 12,
+                'garansi_bulan' => $validated['garansi_bulan'] ?? 3,
+                'nilai_kontrak' => $validated['nilai_kontrak'] ?? 0,
+                'catatan_kontrak' => $validated['catatan_kontrak'] ?? 'Penerbitan otomatis saat registrasi sekolah.',
+            ]);
+
+            return redirect()->route('admin.klien.index')
+                ->with('success', "Data sekolah {$klien->nama_sekolah} dan lisensi resmi berhasil dibuat.");
+        }
 
         return redirect()->route('admin.klien.index')
-            ->with('success', 'Data sekolah mitra berhasil ditambahkan.');
+            ->with('success', 'Data sekolah berhasil ditambahkan.');
+    }
+
+    public function storeLisensi(Request $request, string $id): RedirectResponse
+    {
+        $klien = KlienSekolah::findOrFail($id);
+
+        $validated = $request->validate([
+            'model_lisensi' => 'required|in:beli_putus,langganan',
+            'tier_paket' => 'required|in:lite,standar,enterprise',
+            'domain_terdaftar' => 'nullable|string|max:100',
+            'durasi_bulan' => 'nullable|integer|min:1',
+            'garansi_bulan' => 'nullable|integer|min:0',
+            'nilai_kontrak' => 'required|numeric|min:0',
+            'catatan_kontrak' => 'nullable|string',
+        ]);
+
+        $this->issueLicenseForKlien($klien, $validated);
+
+        return redirect()->back()->with('success', "Lisensi resmi untuk {$klien->nama_sekolah} berhasil diterbitkan.");
+    }
+
+    protected function issueLicenseForKlien(KlienSekolah $klien, array $data): Lisensi
+    {
+        $tanggalRilis = now();
+        $year = $tanggalRilis->format('Y');
+        $tipe = strtoupper($klien->tipe_sekolah);
+        $nomorLisensi = "LIC-{$year}-{$tipe}-{$klien->npsn}";
+
+        $tanggalKadaluarsa = null;
+        if (($data['model_lisensi'] ?? 'beli_putus') === 'langganan') {
+            $durasiBulan = !empty($data['durasi_bulan']) ? (int) $data['durasi_bulan'] : 12;
+            $tanggalKadaluarsa = $tanggalRilis->copy()->addMonths($durasiBulan);
+            $garansiBugfix = $tanggalKadaluarsa->copy();
+        } else {
+            $garansiBulan = isset($data['garansi_bulan']) ? (int) $data['garansi_bulan'] : 3;
+            $garansiBugfix = $tanggalRilis->copy()->addMonths($garansiBulan);
+        }
+
+        $serialKey = $this->licenseSigner->generateSerialKey($klien->tipe_sekolah);
+        $tokenApi = $this->licenseSigner->generateApiToken();
+
+        $lisensi = Lisensi::create([
+            'klien_sekolah_id' => $klien->id,
+            'nomor_lisensi' => $nomorLisensi,
+            'serial_key' => $serialKey,
+            'model_lisensi' => $data['model_lisensi'] ?? 'beli_putus',
+            'tier_paket' => $data['tier_paket'] ?? 'enterprise',
+            'token_api' => $tokenApi,
+            'domain_terdaftar' => $data['domain_terdaftar'] ?: null,
+            'tanggal_rilis' => $tanggalRilis,
+            'tanggal_kadaluarsa' => $tanggalKadaluarsa,
+            'garansi_bugfix_hingga' => $garansiBugfix,
+            'status' => 'active',
+            'nilai_kontrak' => $data['nilai_kontrak'] ?? 0,
+            'catatan_kontrak' => $data['catatan_kontrak'] ?? null,
+            'allowed_features' => [
+                'cbt_engine',
+                'kurikulum_merdeka',
+                'multimedia_materials',
+                'leger_nilai',
+                'presensi_qr',
+                'rapor_otomatis',
+            ],
+        ]);
+
+        $signedPayload = $this->licenseSigner->generateSignedLicensePayload($lisensi);
+        $lisensi->update(['signed_license_payload' => $signedPayload]);
+
+        return $lisensi;
     }
 
     public function show(string $id): Response
     {
-        $klien = KlienSekolah::with(['lisensis.telemetriHeartbeats' => function ($q) {
+        $klien = KlienSekolah::with(['lisensis' => function ($q) {
+            $q->latest();
+        }, 'lisensis.telemetriHeartbeats' => function ($q) {
             $q->latest('waktu_ping')->take(5);
         }, 'tiketDukungans' => function ($q) {
             $q->latest();
@@ -75,6 +189,7 @@ class KlienController extends Controller
 
         return Inertia::render('admin/klien/Show', [
             'klien' => $klien,
+            'publicKey' => $this->licenseSigner->getPublicKey(),
         ]);
     }
 
@@ -98,7 +213,7 @@ class KlienController extends Controller
 
         $klien->update($validated);
 
-        return redirect()->back()->with('success', 'Data sekolah mitra berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Data sekolah berhasil diperbarui.');
     }
 
     public function destroy(string $id): RedirectResponse
@@ -107,6 +222,7 @@ class KlienController extends Controller
         $klien->delete();
 
         return redirect()->route('admin.klien.index')
-            ->with('success', 'Data sekolah mitra berhasil dihapus.');
+            ->with('success', 'Data sekolah berhasil dihapus.');
     }
 }
+

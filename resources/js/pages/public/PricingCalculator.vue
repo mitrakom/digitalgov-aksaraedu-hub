@@ -119,7 +119,7 @@ const downloadQuotationPdf = () => {
         doc.setTextColor(203, 213, 225);
         doc.setFontSize(8);
         doc.text(
-            'Website: hub.aksaraedu.id | Email: sales@aksaraedu.id | WA: 0812-3456-7890',
+            'Website: aksaraedu.mitralab.site | Email: sales@mitralab.site | WA: 0812-3456-7890',
             20,
             25,
         );

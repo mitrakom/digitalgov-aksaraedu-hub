@@ -13,12 +13,14 @@ import {
     UserCog,
     LogOut,
     ChevronRight,
+    ChevronDown,
     Menu,
     X,
     ShieldCheck,
     CheckCircle2,
     AlertCircle,
     ExternalLink,
+    Sparkles,
 } from 'lucide-vue-next';
 
 const page = usePage();
@@ -31,25 +33,40 @@ const flash = computed(
 );
 const userRole = computed(() => (page.props as any).auth?.user?.role);
 
-const navItems = [
-    { name: 'Dashboard Eksekutif', href: '/admin', icon: LayoutDashboard },
-    { name: 'Sekolah Mitra (CRM)', href: '/admin/klien', icon: School },
-    { name: 'Master Lisensi & RSA', href: '/admin/lisensi', icon: KeyRound },
-    { name: 'Telemetri & Heartbeat', href: '/admin/telemetri', icon: Activity },
-    { name: 'Repositori Rilis & Patch', href: '/admin/rilis', icon: Package },
-    { name: 'Tiket Dukungan (SLA)', href: '/admin/tiket', icon: LifeBuoy },
-    { name: 'Leads Demo (Sales)', href: '/admin/leads', icon: Users2 },
-    { name: 'Siaran Remote Klien', href: '/admin/pengumuman', icon: Radio },
+// 1. Menu Utama
+const primaryNavItems = [
+    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+    { name: 'Sekolah', href: '/admin/klien', icon: School },
+    { name: 'Pembaruan', href: '/admin/rilis', icon: Package },
+];
+
+// 2. Akses & Administrasi
+const teamNavItems = [
     {
-        name: 'Tim & Pengguna Vendor',
+        name: 'Pengguna',
         href: '/admin/pengguna',
         icon: UserCog,
         superAdminOnly: true,
     },
 ];
 
-const visibleNavItems = computed(() => {
-    return navItems.filter((item) => {
+// 3. Menu Tambahan (Sekunder)
+const extensionNavItems = [
+    { name: 'Bantuan', href: '/admin/tiket', icon: LifeBuoy },
+    { name: 'Prospek', href: '/admin/leads', icon: Users2 },
+    { name: 'Pengumuman', href: '/admin/pengumuman', icon: Radio },
+];
+
+const isExtensionActive = computed(() => {
+    return extensionNavItems.some(
+        (item) => page.url === item.href || page.url.startsWith(item.href),
+    );
+});
+
+const showExtensions = ref(isExtensionActive.value);
+
+const visibleTeamNavItems = computed(() => {
+    return teamNavItems.filter((item) => {
         if (item.superAdminOnly && userRole.value !== 'super_admin') {
             return false;
         }
@@ -85,53 +102,142 @@ const logout = () => {
                                 >AksaraEdu</span
                             >
                             <span
-                                class="py-0.2 rounded border border-emerald-500/40 bg-emerald-500/20 px-1.5 text-[9px] font-extrabold text-emerald-400 uppercase"
+                                class="rounded border border-emerald-500/40 bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-extrabold text-emerald-400 uppercase"
                                 >HQ</span
                             >
                         </div>
                         <p class="text-[10px] font-normal text-slate-400">
-                            Vendor Central Control
+                            Vendor Central Hub
                         </p>
                     </div>
                 </Link>
             </div>
 
             <!-- Navigation Links -->
-            <nav class="flex-1 space-y-1.5 overflow-y-auto px-4 py-6">
-                <Link
-                    v-for="item in visibleNavItems"
-                    :key="item.name"
-                    :href="item.href"
-                    class="group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all duration-150"
-                    :class="
-                        page.url === item.href ||
-                        (item.href !== '/admin' &&
-                            page.url.startsWith(item.href))
-                            ? 'border border-emerald-500/30 bg-emerald-600/20 text-emerald-300 shadow-sm'
-                            : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
-                    "
-                >
-                    <component
-                        :is="item.icon"
-                        class="h-4 w-4 transition-transform group-hover:scale-110"
+            <nav class="flex-1 space-y-6 overflow-y-auto px-4 py-6">
+                <!-- Group 1: Menu Utama -->
+                <div class="space-y-1">
+                    <p
+                        class="px-3 pb-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase"
+                    >
+                        Menu Utama
+                    </p>
+                    <Link
+                        v-for="item in primaryNavItems"
+                        :key="item.name"
+                        :href="item.href"
+                        class="group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all duration-150"
                         :class="
                             page.url === item.href ||
                             (item.href !== '/admin' &&
                                 page.url.startsWith(item.href))
-                                ? 'text-emerald-400'
-                                : 'text-slate-400 group-hover:text-slate-200'
+                                ? 'border border-emerald-500/30 bg-emerald-600/20 text-emerald-300 shadow-xs'
+                                : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
                         "
-                    />
-                    <span class="flex-1">{{ item.name }}</span>
-                    <ChevronRight
-                        v-if="
+                    >
+                        <component
+                            :is="item.icon"
+                            class="h-4 w-4 transition-transform group-hover:scale-110"
+                            :class="
+                                page.url === item.href ||
+                                (item.href !== '/admin' &&
+                                    page.url.startsWith(item.href))
+                                    ? 'text-emerald-400'
+                                    : 'text-slate-400 group-hover:text-slate-200'
+                            "
+                        />
+                        <span class="flex-1">{{ item.name }}</span>
+                        <ChevronRight
+                            v-if="
+                                page.url === item.href ||
+                                (item.href !== '/admin' &&
+                                    page.url.startsWith(item.href))
+                            "
+                            class="h-3.5 w-3.5 text-emerald-400"
+                        />
+                    </Link>
+                </div>
+
+                <!-- Group 2: Tim & Pengguna Vendor -->
+                <div v-if="visibleTeamNavItems.length > 0" class="space-y-1">
+                    <p
+                        class="px-3 pb-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase"
+                    >
+                        Administrasi
+                    </p>
+                    <Link
+                        v-for="item in visibleTeamNavItems"
+                        :key="item.name"
+                        :href="item.href"
+                        class="group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all duration-150"
+                        :class="
                             page.url === item.href ||
-                            (item.href !== '/admin' &&
-                                page.url.startsWith(item.href))
+                            page.url.startsWith(item.href)
+                                ? 'border border-emerald-500/30 bg-emerald-600/20 text-emerald-300 shadow-xs'
+                                : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
                         "
-                        class="h-3.5 w-3.5 text-emerald-400"
-                    />
-                </Link>
+                    >
+                        <component
+                            :is="item.icon"
+                            class="h-4 w-4 transition-transform group-hover:scale-110"
+                            :class="
+                                page.url === item.href ||
+                                page.url.startsWith(item.href)
+                                    ? 'text-emerald-400'
+                                    : 'text-slate-400 group-hover:text-slate-200'
+                            "
+                        />
+                        <span class="flex-1">{{ item.name }}</span>
+                    </Link>
+                </div>
+
+                <!-- Group 3: Modul Ekstensi / Lanjutan (Collapsible) -->
+                <div class="space-y-1">
+                    <button
+                        type="button"
+                        class="flex w-full cursor-pointer items-center justify-between rounded-lg px-3 py-1.5 text-[10px] font-bold tracking-wider text-slate-400 uppercase transition-colors hover:text-slate-200"
+                        @click="showExtensions = !showExtensions"
+                    >
+                        <span class="flex items-center gap-1.5">
+                            <span>Menu Tambahan</span>
+                            <span
+                                v-if="isExtensionActive"
+                                class="h-1.5 w-1.5 rounded-full bg-emerald-400"
+                            ></span>
+                        </span>
+                        <ChevronDown
+                            class="h-3.5 w-3.5 transition-transform duration-200"
+                            :class="showExtensions ? 'rotate-180' : ''"
+                        />
+                    </button>
+
+                    <div v-show="showExtensions" class="space-y-1 pt-1">
+                        <Link
+                            v-for="item in extensionNavItems"
+                            :key="item.name"
+                            :href="item.href"
+                            class="group flex items-center gap-3 rounded-xl px-3.5 py-2 text-xs font-medium transition-all duration-150"
+                            :class="
+                                page.url === item.href ||
+                                page.url.startsWith(item.href)
+                                    ? 'border border-emerald-500/30 bg-emerald-600/20 text-emerald-300'
+                                    : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-300'
+                            "
+                        >
+                            <component
+                                :is="item.icon"
+                                class="h-3.5 w-3.5 transition-transform group-hover:scale-110"
+                                :class="
+                                    page.url === item.href ||
+                                    page.url.startsWith(item.href)
+                                        ? 'text-emerald-400'
+                                        : 'text-slate-400'
+                                "
+                            />
+                            <span class="flex-1">{{ item.name }}</span>
+                        </Link>
+                    </div>
+                </div>
             </nav>
 
             <!-- Bottom User Profile & Logout -->
@@ -204,17 +310,63 @@ const logout = () => {
                         <X class="h-5 w-5" />
                     </button>
                 </div>
-                <nav class="flex-1 space-y-1 overflow-y-auto py-4">
-                    <Link
-                        v-for="item in visibleNavItems"
-                        :key="item.name"
-                        :href="item.href"
-                        class="flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-800"
-                        @click="sidebarOpen = false"
+                <nav class="flex-1 space-y-4 overflow-y-auto py-4">
+                    <div class="space-y-1">
+                        <p
+                            class="px-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase"
+                        >
+                            Menu Utama
+                        </p>
+                        <Link
+                            v-for="item in primaryNavItems"
+                            :key="item.name"
+                            :href="item.href"
+                            class="flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-800"
+                            @click="sidebarOpen = false"
+                        >
+                            <component :is="item.icon" class="h-4 w-4" />
+                            <span>{{ item.name }}</span>
+                        </Link>
+                    </div>
+
+                    <div
+                        v-if="visibleTeamNavItems.length > 0"
+                        class="space-y-1"
                     >
-                        <component :is="item.icon" class="h-4 w-4" />
-                        <span>{{ item.name }}</span>
-                    </Link>
+                        <p
+                            class="px-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase"
+                        >
+                            Administrasi
+                        </p>
+                        <Link
+                            v-for="item in visibleTeamNavItems"
+                            :key="item.name"
+                            :href="item.href"
+                            class="flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-800"
+                            @click="sidebarOpen = false"
+                        >
+                            <component :is="item.icon" class="h-4 w-4" />
+                            <span>{{ item.name }}</span>
+                        </Link>
+                    </div>
+
+                    <div class="space-y-1">
+                        <p
+                            class="px-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase"
+                        >
+                            Menu Tambahan
+                        </p>
+                        <Link
+                            v-for="item in extensionNavItems"
+                            :key="item.name"
+                            :href="item.href"
+                            class="flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium text-slate-400 hover:bg-slate-800"
+                            @click="sidebarOpen = false"
+                        >
+                            <component :is="item.icon" class="h-3.5 w-3.5" />
+                            <span>{{ item.name }}</span>
+                        </Link>
+                    </div>
                 </nav>
                 <button
                     @click="logout"

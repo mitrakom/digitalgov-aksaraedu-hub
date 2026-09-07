@@ -35,7 +35,8 @@ class LeadApiController extends Controller
         }
 
         $demoSlug = Str::slug($request->input('nama_sekolah')).'-'.Str::random(5);
-        $demoUrl = "https://demo.aksaraedu.id/{$demoSlug}";
+        $demoBaseUrl = rtrim((string) env('DEMO_BASE_URL', 'https://demo-aksaraedu.mitralab.site'), '/');
+        $demoUrl = "{$demoBaseUrl}/{$demoSlug}";
 
         $lead = LeadsDemo::create([
             'nama_pemohon' => $request->input('nama_pemohon'),

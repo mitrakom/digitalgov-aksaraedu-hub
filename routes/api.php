@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\DeployWebhookController;
 use App\Http\Controllers\Api\LeadApiController;
 use App\Http\Controllers\Api\LicenseApiController;
+use App\Http\Controllers\Api\ProvisionController;
 use App\Http\Controllers\Api\UpdateApiController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,7 +38,13 @@ Route::prefix('v1')->group(function () {
     // 5. Leads & Instant Demo Generator
     Route::post('/leads/demo', [LeadApiController::class, 'store'])
         ->middleware('throttle:20,1');
+
+    // 6. Direct Web Bootstrap Loader Bundle Streamer (Signed Token)
+    Route::get('/provision/download-bundle/{token}', [ProvisionController::class, 'downloadBundle'])
+        ->name('api.provision.download-bundle')
+        ->middleware('throttle:30,1');
 });
+
 
 // 6. Post-Deploy Webhook Trigger (Auto-Extract, Migrate, & Cache Optimization)
 Route::post('/deploy-webhook', [DeployWebhookController::class, 'handle'])

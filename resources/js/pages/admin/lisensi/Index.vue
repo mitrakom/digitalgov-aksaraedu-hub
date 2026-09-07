@@ -20,6 +20,7 @@ import {
     Copy,
     ExternalLink,
     Cpu,
+    Zap,
 } from 'lucide-vue-next';
 
 interface Props {
@@ -318,6 +319,13 @@ const copyPublicKey = () => {
                                     <div
                                         class="flex items-center justify-end gap-1.5"
                                     >
+                                        <a
+                                            :href="`/admin/lisensi/${lic.id}/download-loader`"
+                                            title="Unduh Web Loader (.php) ~5KB — Pemasang Mandiri Instan Klien (Solusi 1)"
+                                            class="rounded-lg border border-amber-500/30 bg-amber-600/20 p-1.5 text-amber-300 transition-colors hover:bg-amber-600 hover:text-white"
+                                        >
+                                            <Zap class="h-3.5 w-3.5" />
+                                        </a>
                                         <a
                                             :href="`/admin/lisensi/${lic.id}/download-bundle`"
                                             title="Unduh Paket Bundle Siap Pasang Sekolah (.zip)"

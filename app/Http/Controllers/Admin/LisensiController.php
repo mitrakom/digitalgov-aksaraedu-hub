@@ -203,6 +203,9 @@ class LisensiController extends Controller
 
     public function downloadCustomBundle(string $id, BundleCustomizerService $bundleCustomizer): BinaryFileResponse
     {
+        @set_time_limit(300);
+        @ini_set('max_execution_time', '300');
+
         $lisensi = Lisensi::with('klienSekolah')->findOrFail($id);
 
         $zipPath = $bundleCustomizer->createCustomizedBundle($lisensi);
@@ -211,4 +214,18 @@ class LisensiController extends Controller
 
         return response()->download($zipPath, $filename)->deleteFileAfterSend(true);
     }
+
+    public function downloadLoader(string $id, BundleCustomizerService $bundleCustomizer): HttpResponse
+    {
+        $lisensi = Lisensi::with('klienSekolah')->findOrFail($id);
+
+        $loaderContent = $bundleCustomizer->generateWebLoaderScript($lisensi);
+        $filename = "aksara-loader.php";
+
+        return response($loaderContent, 200, [
+            'Content-Type' => 'application/x-php',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
+    }
 }
+

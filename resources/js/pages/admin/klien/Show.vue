@@ -6,6 +6,7 @@ import Card from '../../../components/ui/Card.vue';
 import Button from '../../../components/ui/Button.vue';
 import Badge from '../../../components/ui/Badge.vue';
 import Input from '../../../components/ui/Input.vue';
+import Modal from '../../../components/ui/Modal.vue';
 import {
     School,
     ArrowLeft,
@@ -18,16 +19,23 @@ import {
     CheckCircle2,
     Trash2,
     Calendar,
-    ShieldCheck,
+    Package,
+    RotateCcw,
+    FileCode,
+    Plus,
 } from 'lucide-vue-next';
 
 interface Props {
     klien: any;
+    publicKey?: string;
 }
 
 const props = defineProps<Props>();
 
 const isEditing = ref(false);
+const isModalTerbitkanOpen = ref(false);
+const isModalRenewOpen = ref(false);
+const selectedLicense = ref<any>(null);
 
 const form = useForm({
     npsn: props.klien.npsn,
@@ -43,6 +51,21 @@ const form = useForm({
     status_klien: props.klien.status_klien,
 });
 
+const formLisensi = useForm({
+    model_lisensi: 'beli_putus',
+    tier_paket: 'enterprise',
+    domain_terdaftar: '',
+    durasi_bulan: 12,
+    garansi_bulan: 3,
+    nilai_kontrak: 15000000,
+    catatan_kontrak: '',
+});
+
+const formRenew = useForm({
+    perpanjang_bulan: 12,
+    nilai_kontrak_tambahan: 6000000,
+});
+
 const updateKlien = () => {
     form.put(`/admin/klien/${props.klien.id}`, {
         onSuccess: () => {
@@ -54,17 +77,46 @@ const updateKlien = () => {
 const deleteKlien = () => {
     if (
         confirm(
-            `Yakin ingin menghapus sekolah mitra ${props.klien.nama_sekolah}? Seluruh lisensi dan telemetri terkait akan terhapus.`,
+            `Yakin ingin menghapus data sekolah ${props.klien.nama_sekolah}? Seluruh data lisensi terkait akan terhapus.`,
         )
     ) {
         router.delete(`/admin/klien/${props.klien.id}`);
+    }
+};
+
+const submitTerbitkanLisensi = () => {
+    formLisensi.post(`/admin/klien/${props.klien.id}/lisensi`, {
+        onSuccess: () => {
+            isModalTerbitkanOpen.value = false;
+            formLisensi.reset();
+        },
+    });
+};
+
+const openRenewModal = (lic: any) => {
+    selectedLicense.value = lic;
+    isModalRenewOpen.value = true;
+};
+
+const submitRenew = () => {
+    if (!selectedLicense.value) return;
+    formRenew.post(`/admin/lisensi/${selectedLicense.value.id}/renew`, {
+        onSuccess: () => {
+            isModalRenewOpen.value = false;
+        },
+    });
+};
+
+const resetHardware = (licId: string) => {
+    if (confirm('Reset kaitan hardware fingerprint? Server sekolah dapat melakukan binding ulang pada mesin baru.')) {
+        router.post(`/admin/lisensi/${licId}/reset-hardware`);
     }
 };
 </script>
 
 <template>
     <AdminLayout>
-        <Head :title="`Detail Klien: ${klien.nama_sekolah} - AksaraEdu HQ`" />
+        <Head :title="`Detail Sekolah: ${klien.nama_sekolah} - AksaraEdu HQ`" />
 
         <template #header-title>
             <div class="flex items-center gap-2">
@@ -239,84 +291,259 @@ const deleteKlien = () => {
                     <div class="flex items-center gap-2">
                         <KeyRound class="h-4 w-4 text-emerald-400" />
                         <h3 class="text-sm font-bold text-white">
-                            Riwayat Lisensi Resmi
+                            Lisensi Resmi Sekolah
                         </h3>
                     </div>
-                    <Link
-                        href="/admin/lisensi"
-                        class="text-xs text-emerald-400 hover:underline"
+                    <Button
+                        @click="isModalTerbitkanOpen = true"
+                        variant="primary"
+                        size="sm"
+                        class="bg-emerald-500 hover:bg-emerald-600"
                     >
-                        + Terbitkan Lisensi Baru
-                    </Link>
+                        <Plus class="mr-1 h-3.5 w-3.5" /> Terbitkan Lisensi Baru
+                    </Button>
                 </div>
 
-                <div class="space-y-3">
+                <div class="space-y-4">
                     <div
                         v-for="lic in klien.lisensis"
                         :key="lic.id"
-                        class="border-slate-750 flex flex-col justify-between gap-4 rounded-xl border bg-slate-800/50 p-4 text-xs md:flex-row md:items-center"
+                        class="flex flex-col justify-between gap-4 rounded-xl border border-slate-800 bg-slate-950/60 p-4 text-xs lg:flex-row lg:items-center"
                     >
-                        <div class="space-y-1">
+                        <div class="space-y-1.5 flex-1">
                             <div class="flex items-center gap-2">
-                                <span
-                                    class="font-mono text-sm font-bold text-white"
-                                    >{{ lic.nomor_lisensi }}</span
-                                >
+                                <span class="font-mono text-sm font-bold text-white">
+                                    {{ lic.nomor_lisensi }}
+                                </span>
                                 <Badge
-                                    :variant="
-                                        lic.model_lisensi === 'beli_putus'
-                                            ? 'success'
-                                            : 'info'
-                                    "
+                                    :variant="lic.model_lisensi === 'beli_putus' ? 'success' : 'info'"
                                 >
-                                    {{
-                                        lic.model_lisensi === 'beli_putus'
-                                            ? 'Beli Putus On-Premise'
-                                            : 'Langganan SaaS'
-                                    }}
+                                    {{ lic.model_lisensi === 'beli_putus' ? 'Beli Putus (On-Premise)' : 'Langganan (SaaS)' }}
                                 </Badge>
-                                <Badge
-                                    :variant="
-                                        lic.status === 'active'
-                                            ? 'success'
-                                            : 'warning'
-                                    "
-                                    >{{ lic.status }}</Badge
-                                >
+                                <Badge :variant="lic.status === 'active' ? 'success' : 'warning'">
+                                    {{ lic.status }}
+                                </Badge>
                             </div>
-                            <p class="text-slate-400">
-                                Serial Key:
-                                <span class="font-mono text-emerald-400">{{
-                                    lic.serial_key || '-'
-                                }}</span>
-                                | Domain:
-                                <span class="text-slate-300">{{
-                                    lic.domain_terdaftar || 'Belum di-bind'
-                                }}</span>
-                            </p>
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-400">
+                                <span>
+                                    Serial Key: <strong class="font-mono text-emerald-400">{{ lic.serial_key || '-' }}</strong>
+                                </span>
+                                <span>•</span>
+                                <span>
+                                    Domain Terdaftar: <strong class="text-slate-300">{{ lic.domain_terdaftar || 'Semua Domain' }}</strong>
+                                </span>
+                                <span>•</span>
+                                <span>
+                                    Hardware Binding: <strong class="text-slate-300">{{ lic.hardware_fingerprint ? 'Terkunci' : 'Belum Terikat' }}</strong>
+                                </span>
+                            </div>
                             <p class="text-[11px] text-slate-500">
-                                Terbit: {{ lic.tanggal_rilis }} | Garansi
-                                Bugfix: {{ lic.garansi_bugfix_hingga || '-' }}
+                                Diterbitkan: {{ lic.tanggal_rilis }}
+                                <span v-if="lic.tanggal_kadaluarsa"> | Kadaluarsa: {{ lic.tanggal_kadaluarsa }}</span>
+                                <span v-if="lic.garansi_bugfix_hingga"> | Garansi Bugfix: {{ lic.garansi_bugfix_hingga }}</span>
                             </p>
                         </div>
 
-                        <div class="flex items-center gap-2">
+                        <!-- Actions for License -->
+                        <div class="flex flex-wrap items-center gap-2">
+                            <!-- Unduh File Lisensi .lic -->
                             <a
                                 :href="`/admin/lisensi/${lic.id}/download`"
                                 class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 font-semibold text-white hover:bg-emerald-500"
+                                title="Unduh berkas lisensi resmi aksaraedu.lic"
                             >
                                 <Download class="h-3.5 w-3.5" /> Unduh .lic
                             </a>
+
+                            <!-- Unduh Bundle Siap Pasang .zip -->
+                            <a
+                                :href="`/admin/lisensi/${lic.id}/download-bundle`"
+                                class="inline-flex items-center gap-1.5 rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-3 py-1.5 font-semibold text-indigo-300 hover:bg-indigo-500/20"
+                                title="Unduh paket aplikasi LMS siap pasang untuk sekolah ini"
+                            >
+                                <Package class="h-3.5 w-3.5" /> Unduh Bundle ZIP
+                            </a>
+
+                            <!-- Unduh Web Loader script -->
+                            <a
+                                :href="`/admin/lisensi/${lic.id}/download-loader`"
+                                class="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs font-semibold text-slate-300 hover:bg-slate-700"
+                                title="Unduh aksara-loader.php untuk deployment web hosting otomatis"
+                            >
+                                <FileCode class="h-3.5 w-3.5 text-slate-400" /> Loader
+                            </a>
+
+                            <!-- Perpanjang -->
+                            <button
+                                v-if="lic.model_lisensi === 'langganan'"
+                                @click="openRenewModal(lic)"
+                                class="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-xs font-semibold text-slate-300 hover:bg-slate-700"
+                            >
+                                Perpanjang
+                            </button>
+
+                            <!-- Reset Hardware -->
+                            <button
+                                v-if="lic.hardware_fingerprint"
+                                @click="resetHardware(lic.id)"
+                                class="rounded-lg border border-slate-700 bg-slate-800 px-2 py-1.5 text-xs font-semibold text-slate-400 hover:text-amber-400"
+                                title="Reset pengikatan Hardware Fingerprint"
+                            >
+                                <RotateCcw class="h-3.5 w-3.5" />
+                            </button>
                         </div>
                     </div>
+
                     <div
                         v-if="!klien.lisensis || klien.lisensis.length === 0"
-                        class="py-4 text-center text-xs text-slate-500"
+                        class="py-6 text-center text-xs text-slate-500"
                     >
-                        Belum ada lisensi yang diterbitkan untuk sekolah ini.
+                        Belum ada lisensi yang diterbitkan untuk sekolah ini. Klik <strong>+ Terbitkan Lisensi Baru</strong> di atas.
                     </div>
                 </div>
             </Card>
         </div>
+
+        <!-- Modal Terbitkan Lisensi Baru -->
+        <Modal
+            :show="isModalTerbitkanOpen"
+            @close="isModalTerbitkanOpen = false"
+            title="Terbitkan Lisensi Baru"
+            maxWidth="md"
+        >
+            <form @submit.prevent="submitTerbitkanLisensi" class="space-y-4">
+                <div>
+                    <label class="mb-1 block text-xs font-medium text-slate-300">Model Lisensi</label>
+                    <select
+                        v-model="formLisensi.model_lisensi"
+                        class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-slate-100"
+                    >
+                        <option value="beli_putus">Beli Putus (On-Premise 100% Offline)</option>
+                        <option value="langganan">Berlangganan (SaaS Cloud)</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="mb-1 block text-xs font-medium text-slate-300">Tier Paket</label>
+                        <select
+                            v-model="formLisensi.tier_paket"
+                            class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs text-slate-100"
+                        >
+                            <option value="lite">Lite</option>
+                            <option value="standar">Standar</option>
+                            <option value="enterprise">Enterprise</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-medium text-slate-300">
+                            {{ formLisensi.model_lisensi === 'langganan' ? 'Durasi (Bulan)' : 'Garansi (Bulan)' }}
+                        </label>
+                        <Input
+                            v-if="formLisensi.model_lisensi === 'langganan'"
+                            v-model="formLisensi.durasi_bulan"
+                            type="number"
+                            placeholder="12"
+                        />
+                        <Input
+                            v-else
+                            v-model="formLisensi.garansi_bulan"
+                            type="number"
+                            placeholder="3"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-xs font-medium text-slate-300">Domain Terdaftar (Opsional)</label>
+                    <Input
+                        v-model="formLisensi.domain_terdaftar"
+                        placeholder="lms.sekolah.sch.id"
+                    />
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-xs font-medium text-slate-300">Nilai Kontrak (Rp)</label>
+                    <Input
+                        v-model="formLisensi.nilai_kontrak"
+                        type="number"
+                        placeholder="15000000"
+                    />
+                </div>
+
+                <div class="flex justify-end gap-2 border-t border-slate-800 pt-4">
+                    <Button
+                        type="button"
+                        @click="isModalTerbitkanOpen = false"
+                        variant="ghost"
+                        size="sm"
+                    >
+                        Batal
+                    </Button>
+                    <Button
+                        type="submit"
+                        :loading="formLisensi.processing"
+                        variant="primary"
+                        size="sm"
+                        class="bg-emerald-500 hover:bg-emerald-600 font-bold"
+                    >
+                        Terbitkan Lisensi
+                    </Button>
+                </div>
+            </form>
+        </Modal>
+
+        <!-- Modal Perpanjang Masa Aktif Lisensi -->
+        <Modal
+            :show="isModalRenewOpen"
+            @close="isModalRenewOpen = false"
+            title="Perpanjang Masa Aktif Lisensi"
+            maxWidth="sm"
+        >
+            <form @submit.prevent="submitRenew" class="space-y-4 text-xs">
+                <p class="text-slate-400">
+                    Perpanjang lisensi <strong class="text-white">{{ selectedLicense?.nomor_lisensi }}</strong>.
+                </p>
+
+                <div>
+                    <label class="mb-1 block font-medium text-slate-300">Tambahan Durasi (Bulan)</label>
+                    <Input
+                        v-model="formRenew.perpanjang_bulan"
+                        type="number"
+                        placeholder="12"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label class="mb-1 block font-medium text-slate-300">Biaya Perpanjangan (Rp)</label>
+                    <Input
+                        v-model="formRenew.nilai_kontrak_tambahan"
+                        type="number"
+                        placeholder="6000000"
+                    />
+                </div>
+
+                <div class="flex justify-end gap-2 border-t border-slate-800 pt-4">
+                    <Button
+                        type="button"
+                        @click="isModalRenewOpen = false"
+                        variant="ghost"
+                        size="sm"
+                    >
+                        Batal
+                    </Button>
+                    <Button
+                        type="submit"
+                        :loading="formRenew.processing"
+                        variant="primary"
+                        size="sm"
+                        class="bg-emerald-500 hover:bg-emerald-600 font-bold"
+                    >
+                        Simpan Perpanjangan
+                    </Button>
+                </div>
+            </form>
+        </Modal>
     </AdminLayout>
 </template>

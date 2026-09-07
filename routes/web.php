@@ -34,12 +34,15 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Manajemen Klien Sekolah
+    // Manajemen Sekolah & Lisensi
     Route::get('/klien', [KlienController::class, 'index'])->name('klien.index');
+    Route::get('/sekolah', [KlienController::class, 'index'])->name('sekolah.index');
     Route::post('/klien', [KlienController::class, 'store'])->name('klien.store');
     Route::get('/klien/{id}', [KlienController::class, 'show'])->name('klien.show');
+    Route::get('/sekolah/{id}', [KlienController::class, 'show'])->name('sekolah.show');
     Route::put('/klien/{id}', [KlienController::class, 'update'])->name('klien.update');
     Route::delete('/klien/{id}', [KlienController::class, 'destroy'])->name('klien.destroy');
+    Route::post('/klien/{id}/lisensi', [KlienController::class, 'storeLisensi'])->name('klien.lisensi.store');
 
     // Master Licensing Engine
     Route::get('/lisensi', [LisensiController::class, 'index'])->name('lisensi.index');
@@ -49,6 +52,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::post('/lisensi/{id}/revoke', [LisensiController::class, 'revoke'])->name('lisensi.revoke');
     Route::get('/lisensi/{id}/download', [LisensiController::class, 'downloadLicenseFile'])->name('lisensi.download');
     Route::get('/lisensi/{id}/download-bundle', [LisensiController::class, 'downloadCustomBundle'])->name('lisensi.download-bundle');
+    Route::get('/lisensi/{id}/download-loader', [LisensiController::class, 'downloadLoader'])->name('lisensi.download-loader');
 
     // Telemetri & Heartbeat Monitor
     Route::get('/telemetri', [TelemetriController::class, 'index'])->name('telemetri.index');

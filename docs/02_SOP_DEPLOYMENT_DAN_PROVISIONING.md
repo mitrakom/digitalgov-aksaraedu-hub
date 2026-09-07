@@ -79,11 +79,33 @@ Standar Operasional Prosedur (SOP) ini mengatur tata cara deployment, instalasi,
 
 ## 3. SOP Deployment LMS Klien - Model Beli Putus (On-Premise)
 
-Model Beli Putus ditujukan untuk instalasi pada server milik sekolah (lokal di lab komputer sekolah atau VPS mandiri milik yayasan).
+Model Beli Putus ditujukan untuk instalasi pada server milik sekolah (lokal di lab komputer sekolah, VPS mandiri milik yayasan, atau shared hosting cPanel).
 
 ![Diagram Alur Deployment Beli Putus](./assets/diagrams/03_deployment_beli_putus.svg)
 
-### Langkah Teknis Deployment On-Premise:
+### 3.1. Metode Cepat: Single-File Web Bootstrap Loader (Rekomendasi Shared Hosting & cPanel)
+
+Metode ini adalah alur rekomendasi resmi (**Solusi 1: Root Proxy & Strict Security**) untuk deployment di hosting pelanggan tanpa perlu mengunggah berkas ZIP berukuran besar via File Manager.
+
+1. **Unduh Web Loader dari Central Hub**:
+   - Buka menu **Master Lisensi** di Central Hub.
+   - Pada baris lisensi sekolah yang dituju, klik tombol kuning berikon petir (**Unduh Web Loader (.php)**).
+   - Hub menghasilkan berkas `aksara-loader.php` (~5 KB) yang telah terikat dengan token unduh bertanda tangan HMAC (berlaku 48 jam).
+2. **Unggah ke Folder Domain Hosting Pelanggan**:
+   - Unggah berkas `aksara-loader.php` ke folder target domain (misal `/app` atau `public_html`).
+   - *Catatan Penting*: Target domain di cPanel tetap diarahkan ke folder utama `/app`.
+3. **Jalankan Pemasang Otomatis via Browser**:
+   - Buka `https://lms.sekolah.sch.id/aksara-loader.php` di peramban web.
+   - Halaman akan memverifikasi prasyarat hosting (PHP 8.3+, ZipArchive, cURL, izin tulis folder).
+   - Klik tombol **"Mulai Unduh & Pasang Otomatis"**.
+   - Server hosting akan mengunduh Custom Bundle secara *server-to-server* langsung dari Central Hub, mengekstrak ke folder proyek, memasang proteksi berkas rahasia `.htaccess` dan `index.php` proxy bridge, lalu menghapus diri sendiri (*self-destruct*).
+4. **Selesaikan Wizard**:
+   - Peramban otomatis dialihkan ke `https://lms.sekolah.sch.id/install`.
+   - Data lisensi, NPSN, dan profil sekolah sudah terisi otomatis (*pre-filled*). Masukkan kredensial database dan sandi admin untuk go-live!
+
+---
+
+### 3.2. Metode Manual / Terminal (VPS & Server Bare Metal):
 
 1. **Persiapan Direktori & Permission**:
     ```bash
@@ -298,3 +320,32 @@ Untuk mengaktifkan pengiriman otomatis ke `@hub`, tambahkan rahasia berikut pada
 2. **Environment Instans Demo**: Set `APP_ENV=demo`, `APP_URL=https://demo.lms.id`, `MAIL_MAILER=log`.
 3. **Eksekusi Seeder Demo**: Jalankan `php artisan db:seed --class=DemoSeeder --force` (atau centang opsi demo di web installer `/install`).
 4. **Auto-Reset Cron Job**: Pasang cron `0 */6 * * * php artisan migrate:fresh --force && php artisan db:seed --class=DemoSeeder --force` untuk menjaga kebersihan data demonstrasi.
+
+---
+
+## 10. Catatan Lapangan & Troubleshooting Cepat (Field Troubleshooting)
+
+### 10.1. Error MySQL 1364: Field 'kelompok' doesn't have a default value
+- **Gejala**: Instalasi via browser `/install` terhenti saat klik tombol **"Pasang"** pada tahap akhir seeding `mata_pelajaran`.
+- **Penyebab**: Strict mode MySQL (`STRICT_TRANS_TABLES`) pada database hosting mendeteksi kolom `kelompok` bersifat `NOT NULL` tanpa default value.
+- **Solusi Cepat di Hosting (Tanpa Download Ulang Bundle)**:
+  - Buka phpMyAdmin &rarr; pilih database &rarr; jalankan query:
+    ```sql
+    ALTER TABLE `mata_pelajaran` MODIFY `kelompok` VARCHAR(30) NOT NULL DEFAULT 'umum';
+    ```
+  - Kembali ke browser installer dan klik **"Pasang"** ulang.
+- **Solusi Permanen Codebase**: Kolom `kelompok` pada migrasi telah ditambahkan `->default('umum')`, model `MataPelajaran` diberi `$attributes = ['kelompok' => 'umum']`, dan `InstallController` disinkronkan ke atribut `kelompok`.
+
+### 10.2. Tombol Shortcut Akun Demo Muncul di Halaman Login Non-Demo
+- **Gejala**: Box "Akses Uji Coba Cepat (Akun Demo)" tetap tampil di `/login` meskipun saat instalasi opsi demo tidak dicentang.
+- **Penyebab**: Komponen frontend `Login.vue` sebelumnya belum diproteksi oleh prop kondisi `isDemoMode`.
+- **Solusi Cepat di Hosting**:
+  - Tambahkan aturan CSS pada `resources/views/app.blade.php` di dalam `<head>`:
+    ```blade
+    @if(config('app.env') !== 'demo')
+        <style>.demo-accounts-shortcut, div:has(> div > span > .text-amber-500) { display: none !important; }</style>
+    @endif
+    ```
+  - Atau unggah berkas patch ringkas dari `scripts/bundle-patch.sh` (~500 KB) tanpa download bundle utuh.
+- **Solusi Permanen Codebase**: `AuthController::showLogin()` mengikat status `isDemoMode` secara dinamis dari `APP_ENV === 'demo'`, dan `Login.vue` menerapkan `v-if="props.isDemoMode"` (default: `false`).
+
