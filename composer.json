@@ -68,7 +68,8 @@
             "pint --parallel",
             "bun run check",
             "bun run types:check",
-            "@test"
+            "@test",
+            "@php artisan optimize:clear --ansi"
         ],
         "types:check": [
             "phpstan analyse --memory-limit=512M"
@@ -77,7 +78,8 @@
             "@php artisan config:clear --ansi",
             "@lint:check",
             "@types:check",
-            "@php artisan test"
+            "@php artisan test",
+            "@php artisan optimize:clear --ansi"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
